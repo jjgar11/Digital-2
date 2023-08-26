@@ -1,8 +1,8 @@
 `define hdl_version 12'h600
 
 module j1soc#(
-              //parameter   bootram_file     = "../../firmware/hello_world/j1.mem"    // For synthesis            
-              parameter   bootram_file     = "../firmware/Hello_World/j1.mem"       // For simulation         
+              //parameter   bootram_file     = "../../firmware/j1.mem"    // For synthesis            
+              parameter   bootram_file     = "../firmware/j1.mem"       // For simulation         
   )(
    // Outputs
    uart_tx, ledout,

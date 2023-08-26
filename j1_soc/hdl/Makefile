@@ -1,103 +1,63 @@
-DESIGN          = j1soc
-PINS            = $(DESIGN).ucf
-DEVICE          = xC3s500e-fg320
-BGFLAGS         = -g TdoPin:PULLNONE -g DonePin:PULLUP \
-                  -g CRC:enable -g StartUpClk:CCLK
-
-XILINXCADROOT   = /opt/Xilinx/13.4/ISE_DS/ISE/bin/lin/ise
-SIM_CMD         = vsim 
-SIM_COMP_SCRIPT = simulation/$(DESIGN)_TB.do
+TARGET          = j1soc
+PINS            = $(DESIGN).lpf
 SIMGEN_OPTIONS  = -p $(FPGA_ARCH) -lang $(LANGUAGE)
 IVERILOG        = iverilog
-
-SAKC_IP         = 192.168.254.101
-
 MULT		= multiplier
 MULT_32		= multiplier/mult_32
 J1		= j1
 DIV		= divider
 DIV_16		= divider/div_16
-UART		= uart
+UART		= uart_lm
 dp_RAM		= dpRAM
 
 
-SRC             = $(DESIGN).v j1.v dpram.v $(UART)/uart.v $(UART)/peripheral_uart.v $(MULT)/peripheral_mult.v  $(MULT_32)/acc.v  $(MULT_32)/comp.v  $(MULT_32)/control_mult.v  $(MULT_32)/lsr.v  $(MULT_32)/rsr.v  $(MULT_32)/mult_32.v $(DIV)/peripheral_div.v $(DIV_16)/control_div.v $(DIV_16)/counter_div.v $(DIV_16)/div_16.v $(DIV_16)/final_result.v $(DIV_16)/lsr_div.v $(DIV_16)/subtractor.v $(dp_RAM)/core_peripheric.v $(dp_RAM)/dualport_RAM.v $(dp_RAM)/dpRAM_interface.v
+SRC             = \
+     $(TARGET).v j1.v dpram.v \
+     $(UART)/uart.v  $(UART)/peripheral_uart.v \
+     $(MULT)/peripheral_mult.v  $(MULT_32)/acc.v  $(MULT_32)/comp.v  $(MULT_32)/control_mult.v  $(MULT_32)/lsr.v  $(MULT_32)/rsr.v  $(MULT_32)/mult_32.v \
+     $(DIV)/peripheral_div.v $(DIV_16)/control_div.v $(DIV_16)/counter_div.v $(DIV_16)/div_16.v $(DIV_16)/final_result.v $(DIV_16)/lsr_div.v $(DIV_16)/subtractor.v \
+     $(dp_RAM)/core_peripheric.v $(dp_RAM)/dualport_RAM.v $(dp_RAM)/dpRAM_interface.v
 
-SIM_SRC = $(DESIGN)_TB.v          \
+SIM_SRC = $(TARGET)_TB.v          \
 
  
-all:            bits
+all: $(TARGET).bit
 
 remake:         clean-build all
 
 clean:
-	rm -f *~ */*~ a.out *.log *.key *.edf *.ps trace.dat 
-	rm -f *.bit
+	rm -rf *~ */*~ a.out *.log *.key *.edf *.json *.config *.vvp  *.svg *rpt
+	rm -rf *.bit
 	rm -rf build
 
 cleanall: clean
 	rm -rf build simulation/work simulation/transcript  simulation/vsim.wlf simulation/$(DESIGN)_TB.vvp simulation/*
 
-bits:           $(DESIGN).bit
-
 #
 # Synthesis
 #
-build/project.src:
-	@[ -d build ] || mkdir build
-	@[ -d simulation ] || mkdir simulation
-	@rm -f $@
-	for i in $(SRC); do echo verilog work ../$$i >> $@; done
-	for i in $(SRC_HDL); do echo VHDL work ../$$i >> $@; done
 
-build/project.xst: build/project.src
-	echo "run" > $@
-	echo "-top $(DESIGN) " >> $@
-	echo "-p $(DEVICE)" >> $@
-	echo "-opt_mode Area" >> $@
-	echo "-opt_level 1" >> $@
-	echo "-ifn project.src" >> $@
-	echo "-ifmt mixed" >> $@
-	echo "-ofn project.ngc" >> $@
-	echo "-ofmt NGC" >> $@
-	echo "-rtlview yes" >> $@
+$(TARGET).json: $(SRC)
+	yosys -p "verilog_defaults -push; verilog_defaults -add -defer; read_verilog $(SRC); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@" -l ${TARGET}.rpt
 
-build/project.ngc: build/project.xst $(SRC)
-	cd build && xst -ifn project.xst -ofn project.log
+$(TARGET)_out.config: $(TARGET).json
+	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 
+# nextpnr-ice40 --json $< --pcf $(TARGET).pcf --package HX --speed 6  --timing-allow-fail --seed 1 
 
-build/project.ngd: build/project.ngc $(PINS)
-	cd build && ngdbuild -p $(DEVICE) project.ngc -uc ../$(PINS)
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
 
-build/project.ncd: build/project.ngd
-	cd build && map -pr b -p $(DEVICE) project
+${TARGET}.svf : ${TARGET}.bit
 
-build/project_r.ncd: build/project.ncd
-	cd build && par -w project project_r.ncd
+svg: $(SRC)
+	yosys -p "prep -top ${TARGET}; write_json ${TARGET}.json" ${SRC}
+	netlistsvg ${TARGET}.json -o ${TARGET}.svg  #--skin default.svg
 
-build/project_r.twr: build/project_r.ncd
-	cd build && trce -v 25 project_r.ncd project.pcf
+iversim: 
+	$(IVERILOG) -gno-io-range-error -o $(TARGET)_TB.vvp $(VINCDIR) $(SRC) $(SIM_SRC) -s $(TARGET)_TB
+	vvp $(TARGET)_TB.vvp; 
+	gtkwave $(TARGET)_TB.vcd&
 
-$(DESIGN).bit:  build/project_r.ncd build/project_r.twr
-	cd build && bitgen project_r.ncd -l -w $(BGFLAGS)
-	@mv -f build/project_r.bit $@
-
-build/project_r.v: build/project_r.ncd
-	cd build &&  ngd2ver project.ngd  -w project.v
-
-postsim: build/project.ngc
-	cd build &&  netgen -sim -ofmt verilog project.ngc
-	cd build && iverilog -Wall \
-	-y $(XILINXCADROOT)/verilog/src/unisims \
-	-y $(XILINXCADROOT)/verilog/src/XilinxCoreLib \
-	project.v ../$(DESIGN)_TB.v -o $(DESIGN).bin
-	cd build && vvp $(DESIGN).bin
-	gtkwave build/$(DESIGN)_TB.vcd&
-
-
-iversim:  build/project.src
-	$(IVERILOG) -gno-io-range-error -o simulation/$(DESIGN)_TB.vvp $(VINCDIR) $(SRC) $(SIM_SRC) -s $(DESIGN)_TB
-	vvp simulation/$(DESIGN)_TB.vvp; mv $(DESIGN)_TB.vcd simulation/
-	gtkwave simulation/$(DESIGN)_TB.vcd&
-
-upload: $(DESIGN).bit
-	scp $(DESIGN).bit root@$(SAKC_IP): 
+configure: ${TARGET}.bit
+#	sudo openFPGALoader -b colorlight-ft232rl -m ${TARGET}.bit 
+	sudo openFPGALoader -c cmsisdap -m ${TARGET}.bit 

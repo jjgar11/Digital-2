@@ -3,7 +3,7 @@
 //------------------------------------------------------------------
 
 module dp_ram #(
-	parameter adr_width = 13,
+	parameter adr_width = 11,
 	parameter dat_width = 16,
 	parameter mem_file_name = "none"
 ) (

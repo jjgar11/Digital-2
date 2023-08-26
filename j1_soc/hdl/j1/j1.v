@@ -1,5 +1,5 @@
 module j1#(
-              parameter   bootram_file     = "../../firmware/Hello_World/j1.mem"         
+              parameter   bootram_file     = "../../firmware/j1.mem"         
   )
   (
    // Inputs

@@ -1,5 +1,5 @@
 module j1soc#(
-      parameter   bootram_file     = "../firmware/Hello_World/j1.mem",
+      parameter   bootram_file     = "../firmware/j1.mem",
       parameter   clk_freq         = 25000000,
       parameter   uart_baud_rate   = 115200
 )(
@@ -75,16 +75,16 @@ module j1soc#(
      .ledout(ledout)
    );
 
-  dpRAM_interface 
-    dpRm(
-    .clk(sys_clk_i), 
-    .d_in(j1_io_dout), 
-    .cs(cs[4]), 
-    .addr(j1_io_addr[7:0]), 
-    .rd(j1_io_rd), 
-    .wr(j1_io_wr), 
-    .d_out(dp_ram_dout)
- );
+//   dpRAM_interface 
+//     dpRm(
+//     .clk(sys_clk_i), 
+//     .d_in(j1_io_dout), 
+//     .cs(cs[4]), 
+//     .addr(j1_io_addr[7:0]), 
+//     .rd(j1_io_rd), 
+//     .wr(j1_io_wr), 
+//     .d_out(dp_ram_dout)
+//  );
 
 
   // ============== Chip_Select (Addres decoder) ======================== 

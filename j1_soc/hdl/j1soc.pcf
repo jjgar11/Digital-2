@@ -1,0 +1,9 @@
+set_io sys_clk_i 60
+
+# Uart
+set_io uart_tx 61
+set_io uart_rx 62
+
+set_io sys_rst_i 49
+
+set_io ledout 55

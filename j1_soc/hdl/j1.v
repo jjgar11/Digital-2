@@ -1,5 +1,5 @@
 module j1#(
-              parameter   bootram_file     = "../firmware/Hello_World/j1.mem"         
+              parameter   bootram_file     = "../firmware/j1.mem"         
   )
   (
    // Inputs
@@ -41,7 +41,7 @@ module j1#(
 
 
 
-dp_ram #(13, 16, bootram_file)
+dp_ram #(11, 16, bootram_file)
 ram0 ( .clk_b(sys_clk_i), .en_b(1), .dat_b(insn), .adr_b({_pc}),
        .clk_a(sys_clk_i), .en_a(|_st0[15:14] == 0), .dat_a_out(ramrd), .dat_a(st1), .we_a(_ramWE & (_st0[15:14] == 0)), .adr_a(st0[15:1])
 );
