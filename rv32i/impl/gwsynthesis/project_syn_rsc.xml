@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="SOC" Register="5" Lut="16">
+    <SubModule name="CPU" Register="126" Alu="142" Lut="582" Bsram="2"/>
+    <SubModule name="RAM" Lut="17" Bsram="4"/>
+    <SubModule name="UART" Register="20" Lut="30"/>
+</Module>
