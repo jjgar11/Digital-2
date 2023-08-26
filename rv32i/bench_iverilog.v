@@ -35,7 +35,7 @@ always #(tck/2) CLK <= ~CLK;
  begin
     $dumpfile("bench.vcd");
     $dumpvars(0,bench);
-     #(tck*100) $finish;
+     #(tck*1000) $finish;
  end
  
  

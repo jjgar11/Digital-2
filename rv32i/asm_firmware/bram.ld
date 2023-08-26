@@ -7,7 +7,7 @@ SECTIONS
     everything :
     {
 	. = ALIGN(4);
-	start.o (.text)
+	multiplier.o (.text)
         *(.*)
     } >BRAM
 }

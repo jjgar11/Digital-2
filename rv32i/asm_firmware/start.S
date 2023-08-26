@@ -8,11 +8,11 @@
 .globl put_hello
 
 start:
-        li   gp,IO_BASE
+	li   p,IO_BASE
 	li   sp,0x400
 blinker:	
 	li   t0, 62
-	li   a2, 30
+	sw   t0, IO_LEDS(gp)
 	call wait
 	li   t0, 61
 	sw   t0, IO_LEDS(gp)
@@ -51,12 +51,14 @@ putstring:
 	addi sp,sp,-4 # save ra on the stack
 	sw ra,0(sp)   # (need to do that for functions that call functions)
 	mv t2,a0	
-.L1:    lbu a0,0(t2)
+.L1:
+	lbu a0,0(t2)
 	beqz a0,.L2
 	call putchar
 	addi t2,t2,1	
 	j .L1
-.L2:    lw ra,0(sp)  # restore ra
+.L2:
+	lw ra,0(sp)  # restore ra
 	addi sp,sp,4 # restore sp
 	ret	
 #	ebreak

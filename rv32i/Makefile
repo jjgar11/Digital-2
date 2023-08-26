@@ -1,5 +1,16 @@
-TARGET=SOC
-TOP=blink
+TARGET=colorlight_5a_75e
+TOP=colorlight_5a_75e
+#TOP=blink
+#GATE_DIR=build/gateware
+#SOFT_DIR=build/software
+#LITEX_DIR=/home/alph4/litex
+#RTL_CPU_DIR=${LITEX_DIR}/pythondata-cpu-vexriscv/pythondata_cpu_vexriscv/verilog
+
+
+SERIAL?=/dev/ttyUSB0
+
+NEXTPNR=nextpnr-ecp5
+CC=riscv64-unknown-elf-gcc
 
 OBJS+= soc_femto.v
 
@@ -16,21 +27,24 @@ $(TARGET).fs:
 
 ${TARGET}.svf : ${TARGET}.bit
 
+
+.PHONY: clean
 clean:
+	make -C ./asm_firmware clean
+	make -C ./c_firmware clean
 	rm -rf impl obj_dir *svg a.out *.vcd
 
 sim: 
 	rm -f a.out *.vcd
 	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_iverilog.v soc_femto.v
 	vvp a.out
-	gtkwave bench.vcd
+	gtkwave bench.vcd &
 
 sim_quark:
 	rm -f a.out *.vcd
 	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark.v femtorv32_quark.v
 	vvp a.out
 	gtkwave bench.vcd
-
 
 sim_verilator: 
 	verilator -CFLAGS '-I../libfemtorv32/ -DSTANDALONE_FEMTOELF' -DBENCH -DBOARD_FREQ=10 -DCPU_FREQ=10 -DPASSTHROUGH_PLL -Wno-fatal \
@@ -45,10 +59,10 @@ svg: $(OBJS)
 	netlistsvg ${TARGET}_flat.json -o ${TARGET}_flat.svg  #--skin default.svg
 
 configure: ${TARGET}.fs
-	sudo openFPGALoader -b tangprimer20k -m impl/pnr/project.fs
+	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${GATE_DIR}/${TARGET}.bit
+	# sudo openFPGALoader -b tangprimer20k -m impl/pnr/project.fs
 	
 
-.PHONY: clean
 
 
 # export PATH=$PATH:/home/carlos/Embedded/Gowin/IDE/bin
