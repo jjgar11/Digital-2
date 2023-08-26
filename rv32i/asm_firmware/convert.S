@@ -4,9 +4,8 @@
 convert:
 	addi	t0, a0, 0 # store binary res in t2
 .bincdb:
-	li		t1, 0
-	andi	t2, t1, 0x80000000
-
+#	li		t1, 0
+#	andi	t2, t1, 0x80000000
 	li		t1, 0
 	li		t2, 9
 	li		t3, 10
