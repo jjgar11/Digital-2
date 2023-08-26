@@ -8,7 +8,7 @@
 .globl put_hello
 
 start:
-	li   p,IO_BASE
+	li   gp,IO_BASE
 	li   sp,0x400
 blinker:	
 	li   t0, 62
