@@ -1,0 +1,10 @@
+run
+-top mult_32 
+-p xc6slx4-2tqg144
+-opt_mode Area
+-opt_level 1
+-ifn project.src
+-ifmt mixed
+-ofn project.ngc
+-ofmt NGC
+-rtlview yes

@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.58 (w)1999-2014 BSI
+[*] Mon Sep 26 12:39:45 2016
+[*]
+[dumpfile] "/home/cain/libro/chapter2/j1/j1_soc/hdl/multiplier/mult_32/simulation/mult_32_TB.vcd"
+[dumpfile_mtime] "Mon Sep 26 12:35:10 2016"
+[dumpfile_size] 2534
+[savefile] "/home/cain/libro/chapter2/j1/j1_soc/hdl/multiplier/mult_32/test_mult32.gtkw"
+[timestart] 5000
+[size] 1280 748
+[pos] -131 -79
+*-15.774528 140300 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mult_32_TB.
+[treeopen] mult_32_TB.uut.
+[sst_width] 196
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 201
+@28
+mult_32_TB.uut.clk
+mult_32_TB.uut.rst
+mult_32_TB.uut.init
+@22
+mult_32_TB.uut.A[15:0]
+mult_32_TB.uut.B[15:0]
+mult_32_TB.uut.acc0.pp[31:0]
+mult_32_TB.uut.lsr0.s_A[31:0]
+@28
+mult_32_TB.uut.lsr0.shift
+@22
+mult_32_TB.uut.rsr0.s_B[15:0]
+@28
+mult_32_TB.uut.control0.state[2:0]
+@29
+mult_32_TB.uut.w_add
+[pattern_trace] 1
+[pattern_trace] 0

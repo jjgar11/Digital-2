@@ -1,0 +1,573 @@
+app.fs:: send_inc_addres \ ( data add -- addr +1 )
+app.fs:  swap  over  ! 1+
+app.fs:: multiplier	\ implementado con manejo del stack
+app.fs:dup d# 1 and 0= invert  if swap rot swap dup rot + swap rot then 
+app.fs:d# 1 rshift swap d# 1 lshift swap
+app.fs:  now dup @ swap drop ant dup @ swap drop +
+app.fs:begin multi_done @ d# 1 = until \ espera hasta que la señal done del multiplicador este en 1
+app.fs:swap div_a !
+app.fs:begin div_done @ d# 1 = until \ espera hasta que la señal done del divisor este en 1
+app.fs:: usar_dpRAM \ envia los 6 primeros terminos de la serie de Fibonnacci a la dpRAM, el periferico invierte su orden, luego son leidos de vuelta
+app.fs:d# 1 h# 7000 !  \ escribe 1 en el registro h# 7000
+app.fs:d# 2 h# 7002 !  \ escribe 2 en el registro h# 7002
+app.fs:d# 3 h# 7004 !  \ escribe 3 en el registro h# 7004
+app.fs:d# 5 h# 7006 !  \ escribe 4 en el registro h# 7006
+app.fs:d# 8 h# 7008 !  \ escribe 8 en el registro h# 7008
+app.fs:d# 13 h# 700A !  \ escribe 13 en el registro h# 700A
+app.fs:begin h# 7008 @ d# 2 = until \ espera hasta que el registro 7008 sea 2, o sea hasta que el periferico reorganize la secuencia
+app.fs:h# 7000 @ \ lee lo que hay en el registro h# 7000, queda almacenado en la pila
+app.fs:h# 7002 @ \ lee lo que hay en el registro h# 7002, queda almacenado en la pila
+app.fs:h# 7004 @ \ lee lo que hay en el registro h# 7004, queda almacenado en la pila
+app.fs:h# 7006 @ \ lee lo que hay en el registro h# 7006, queda almacenado en la pila
+app.fs:h# 7008 @ \ lee lo que hay en el registro h# 7008, queda almacenado en la pila
+app.fs:h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
+app.fs:J1 FORTH Processor                                                                                                
+app.fs:s" J1 FORTH Processor" type-uart
+app.fs:s" Multiplicando:" type-uart
+app.fs:s" Multiplicador:" type-uart
+app.fs:asc_to_dec
+app.fs:swap
+app.fs:asc_to_dec
+app.fs:s" Resultado = " type-uart
+app.fs:swap
+app.fs:\ usar_dpRAM
+app.fs:\ s" A " type-uart   \ Almacena el string y la longitud en la pila en el top
+app.fs:\ Para enviar varios datos a posiciones de memoria contiguas se utiliza este código
+app.fs:\ Se almacenan los datos a enviar en la pila 30h - 37h, después la primera dirección de memoria en este caso A000h y por último el múmero de datos a enviar 8
+app.fs:\ en este caso. Al ejecutar este segmento de código se escribirán los siguientes datos en las siguientes direcciones:
+app.fs:\   send_inc_addres 
+app.fs:\ ( lo que debe estar en el stack antes de ejecutar la función -- como queda el stack después de ejecutar la función  )
+app.fs:\ /MOD	 ( n1 n2 -- rem quot )	 Divides. Returns the remainder and quotient.	
+app.fs:\ MOD	 ( n1 n2 -- rem )	 Returns the remainder from division.
+app.fs:\ SWAP is defined to switch the order of the top two stack items.
+app.fs:\ SWAP	 ( n1 n2 -- n2 n1 )	 Reverses the top two stack items.	
+app.fs:\ DUP	 ( n -- n n )	 Duplicates the top stack item.	
+app.fs:\ OVER	 ( n1 n2 -- n2 n1 n2 )	 Makes a copy of the second item and pushes it on top.	
+app.fs:\ ROT	 ( n1 n2 n3 -- n2 n3 n1 )	 Rotates the third item to the top.	
+app.fs:\ DROP	 ( n -- )	 Discards the top stack item.	
+app.fs:\ : PENTAJUMPS  50 0 DO  I .  5 +LOOP ;
+basewords.fs:( Base words implemented in assembler        JCB 13:10 08/24/10)
+basewords.fs:: swap      N     T->N              alu ;
+basewords.fs:: dsp       dsp   T->N          d+1 alu ;
+basewords.fs:: lshift    N<<T                d-1 alu ;
+basewords.fs:: rshift    N>>T                d-1 alu ;
+basewords.fs:\ Elided words
+basewords.fs:\ Words used to implement pick
+basewords.fs:\ : module[ s" Compiling " type [char] " parse type space there ;
+basewords.fs:\ : ]module there swap - . cr ;
+basewords.fs:: module[ there [char] " parse preserve ;
+basewords.fs:: ]module s" Compiled " type count type space there swap - . cr ;
+crossj1.fs:( Cross-compiler for the J1                  JCB 13:12 08/24/10)
+crossj1.fs:( outfile is fileid or zero                  JCB 12:30 11/27/10)
+crossj1.fs:    else
+crossj1.fs:    else
+crossj1.fs:        s" " outfile write-line throw
+crossj1.fs:    else
+crossj1.fs:: space bl emit ;
+crossj1.fs:: spaces dup 0> if 0 do space loop then ;
+crossj1.fs:vocabulary j1assembler  \ assembly storage and instructions
+crossj1.fs:vocabulary metacompiler \ the cross-compiling words
+crossj1.fs:vocabulary j1target     \ actual target words
+crossj1.fs:: j1asm
+crossj1.fs:    also j1assembler definitions
+crossj1.fs:    also forth ;
+crossj1.fs:    j1target also
+crossj1.fs:    j1assembler also
+crossj1.fs:    metacompiler definitions also
+crossj1.fs:    metacompiler also
+crossj1.fs:    j1target definitions ;
+crossj1.fs:j1asm
+crossj1.fs:: tcells tcell * ;
+crossj1.fs:65536 allocate throw constant tflash
+crossj1.fs:    base @ >r 16 base !
+crossj1.fs:    0. bl parse >number throw 2drop postpone literal
+crossj1.fs:    r> base ! ; immediate
+crossj1.fs:: islegal   dup h# 7fff u> abort" illegal address" ;
+crossj1.fs:: tc!       islegal tflash + c! ;
+crossj1.fs:: tc@       islegal tflash + c@ ;
+crossj1.fs:: t!        islegal over h# ff and over tc! swap 8 rshift swap 1+ tc! ;
+crossj1.fs:: t@        islegal dup tc@ swap 1+ tc@ 8 lshift or ;
+crossj1.fs:tflash 65536 255 fill
+crossj1.fs:65536 cells allocate throw constant references
+crossj1.fs:: referenced cells references + 1 swap +! ;
+crossj1.fs:65536 cells allocate throw constant labels
+crossj1.fs:labels 65536 cells 0 fill
+crossj1.fs:    labels there cells + @ 0<>
+crossj1.fs:: preserve  ( c-addr1 u -- c-addr )
+crossj1.fs:    swap cmove r> ;
+crossj1.fs:: setlabel ( c-addr u -- )
+crossj1.fs:    atlabel? if 2drop else preserve labels there cells + ! then ;
+crossj1.fs:j1asm
+crossj1.fs:: hex-literal ( u -- c-addr u ) s>d <# bl hold #s [char] $ hold #> ;
+crossj1.fs:: dsp       h# 0e00 ;
+crossj1.fs:: scall     2/ h# 4000 or t, ;
+crossj1.fs:: dump-words ( c-addr n -- ) \ Write n/2 words from c-addr
+crossj1.fs:        dup t@ s>d <# # # # # #> type space
+crossj1.fs:    3 r> - 5 * spaces
+crossj1.fs:    pad padc @ + swap cmove
+crossj1.fs:    dup cells labels + @ ?dup if
+crossj1.fs:    else
+crossj1.fs:        s>d <# #s [char] $ hold #> pad+
+crossj1.fs:    s"  " pad+
+crossj1.fs:: disassemble-j
+crossj1.fs:        s" LIT " pad+
+crossj1.fs:    else
+crossj1.fs:            s" ALU " pad+
+crossj1.fs:        else
+crossj1.fs:                s" CALL "
+crossj1.fs:            else
+crossj1.fs:                    s" 0BRANCH "
+crossj1.fs:                else
+crossj1.fs:                    s" BRANCH "
+crossj1.fs:: disassemble-line ( offset -- offset' )
+crossj1.fs:    dup cells labels + @ ?dup if s" \ " type count type cr then
+crossj1.fs:    dup s>d <# # # # # #> type space 
+crossj1.fs:    dup 2 dump-words
+crossj1.fs:    disassemble-j
+crossj1.fs:: disassemble-block
+crossj1.fs:        disassemble-line
+crossj1.fs:j1asm
+crossj1.fs:\ tcompile is like "STATE": it is true when compiling
+crossj1.fs:    \ dup $f rshift over $e rshift xor 1 and throw
+crossj1.fs:        h# ffff xor recurse
+crossj1.fs:    else
+crossj1.fs:: (t-constant)
+crossj1.fs:\ Find name - without consuming it - and return a counted string
+crossj1.fs:: wordstr ( "name" -- c-addr u )
+crossj1.fs:: 2literal swap (literal) (literal) ; immediate
+crossj1.fs:    scall
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does>
+crossj1.fs:: lookback ( offset -- v ) there swap - t@ ;
+crossj1.fs:: call>goto dup t@ h# 1fff and swap t! ;
+crossj1.fs:: prevsafe?
+crossj1.fs:    2 lookback h# e000 and h# 6000 =    \ is an ALU
+crossj1.fs:    2 lookback h# 004c and 0= and ;   \ does not touch RStack
+crossj1.fs:: alu>return dup t@ h# 1000 or r-1 swap t! ;
+crossj1.fs:: t; 947947 <> if abort" Unstructured" then
+crossj1.fs:        else
+crossj1.fs:            atlabel? invert prevsafe? and if
+crossj1.fs:            else
+crossj1.fs:    else
+crossj1.fs:: t;fallthru 947947 <> if abort" Unstructured" then
+crossj1.fs:variable shadow-tcompile
+crossj1.fs:wordlist constant escape]-wordlist
+crossj1.fs:escape]-wordlist set-current
+crossj1.fs:: ] shadow-tcompile @ tcompile ! previous previous ;
+crossj1.fs:    tcompile @ shadow-tcompile !
+crossj1.fs:    -tcompile get-order forth-wordlist escape]-wordlist rot 2 + set-order
+crossj1.fs:: constant ( n "name" -- ) create , immediate does> @ (t-constant) ;
+crossj1.fs:: ]asm 
+crossj1.fs:    -tcompile also forth also j1target also j1assembler ;
+crossj1.fs:: asm[ +tcompile previous previous previous ;
+crossj1.fs:: code t: ]asm ;
+crossj1.fs:j1asm
+crossj1.fs:    947947 <> if abort" Unstructured" then
+crossj1.fs:    previous previous previous ;
+crossj1.fs:\ Some Forth words are safe to use in target mode, so import them
+crossj1.fs:: ( postpone ( ;
+crossj1.fs:: \ postpone \ ;
+crossj1.fs:    >in @ ' swap >in !
+crossj1.fs:    create , does> @ execute ;
+crossj1.fs:import [else]
+crossj1.fs:    state @ if
+crossj1.fs:        postpone literal
+crossj1.fs:    else
+crossj1.fs:: [char] ( "name" -- ) ( run: -- ascii) char (literal) ;
+crossj1.fs:: (sliteral--h) ( addr n -- ptr ) ( run: -- eeaddr n )
+crossj1.fs:    s" sliteral" evaluate
+crossj1.fs:: (sliteral) (sliteral--h) drop ;
+crossj1.fs:: s" ( "ccc<quote>" -- ) ( run: -- eaddr n ) [char] " parse (sliteral) ;
+crossj1.fs:: s' ( "ccc<quote>" -- ) ( run: -- eaddr n ) [char] ' parse (sliteral) ;
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does>   @ do-number
+crossj1.fs:: variable  wordstr setlabel create there , 0 t,
+crossj1.fs:            does> @ do-number ;
+crossj1.fs:: 2variable  wordstr setlabel create there , 0 t, 0 t,
+crossj1.fs:            does> @ do-number ;
+crossj1.fs:: createdoes
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> dup @ dup referenced (literal) cell+ @ execute
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> s" 2*" evaluate @ dup referenced (literal) s" + @" evaluate
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> @ tcompile? if do-number s" @ execute" evaluate then ;
+crossj1.fs:: is ( xt "name" -- )
+crossj1.fs:        s" ! " evaluate
+crossj1.fs:    else
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> @ do-number s" @" evaluate ;
+crossj1.fs:    ' >body @ do-number s" !" evaluate ;
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> s" cells" evaluate @ do-number s" +" evaluate ;
+crossj1.fs:    wordstr setlabel
+crossj1.fs:    does> s" 2* cells" evaluate @ do-number s" +" evaluate ;
+crossj1.fs:( eforth's way of handling constants         JCB 13:12 09/03/10)
+crossj1.fs:: sign>number
+crossj1.fs:        1- swap 1+ swap
+crossj1.fs:        2swap dnegate 2swap
+crossj1.fs:    else
+crossj1.fs:: base>number ( caddr u base -- )
+crossj1.fs:    base @ >r base !
+crossj1.fs:    sign>number
+crossj1.fs:    r> base !
+crossj1.fs:    else
+crossj1.fs:        1 = swap c@ [char] . = and if
+crossj1.fs:            drop dup do-number 16 rshift do-number
+crossj1.fs:        else
+crossj1.fs:: d# 0. bl parse 10 base>number ;
+crossj1.fs:: h# 0. bl parse 16 base>number ;
+crossj1.fs:( Conditionals                               JCB 13:12 09/03/10)
+crossj1.fs:: resolve
+crossj1.fs:    dup t@ there 2/ or swap t!
+crossj1.fs:    resolve
+crossj1.fs:    s" (then)" setlabel
+crossj1.fs:: else
+crossj1.fs:    swap resolve
+crossj1.fs:    s" (else)" setlabel
+crossj1.fs:: begin s" (begin)" setlabel there ;
+crossj1.fs:    swap ubranch
+crossj1.fs:    resolve
+crossj1.fs:    s" (repeat)" setlabel
+crossj1.fs:: 0do    s" >r d# 0 >r"     evaluate there s" (do)" setlabel ;
+crossj1.fs:: do     s" 2>r"         evaluate there s" (do)" setlabel ;
+crossj1.fs:    s" looptest" evaluate 0branch
+crossj1.fs:: i     s" r@" evaluate ;
+crossj1.fs:[undefined] sourceline [IF]
+crossj1.fs:    77 constant sourceline#
+crossj1.fs:[undefined] sourcefilename [IF]
+crossj1.fs:    s" none" 2constant sourcefilename
+crossj1.fs:: line# sourceline# (literal) ;
+crossj1.fs:create currfilename 1 cells 80 + allot
+crossj1.fs:: savestr ( c-addr u dst -- ) 2dup c! 1+ swap cmove ;
+crossj1.fs:: getfilename sourcefilename currfilename count compare 0<>
+crossj1.fs:        sourcefilename 2dup currfilename savestr (sliteral--h) currfilename# !
+crossj1.fs:    else
+crossj1.fs:: snap line# getfilename s" (snap)" evaluate ; immediate
+crossj1.fs:: assert 0= if line# sourcefilename (sliteral) s" (assert)" evaluate then ; immediate
+helloworld.fs: h# f000 [char] H  swap c!
+helloworld.fs: h# f00A [char] H swap c!
+hw_defs.fs:( Hardware port assignments )
+hw_defs.fs:h# FF00 constant mult_a  \ no cambiar estos tres
+hw_defs.fs:h# FF02 constant mult_b  \ hacen parte de otras
+hw_defs.fs:h# FF04 constant mult_p  \ definiciones
+hw_defs.fs:h# 6700 constant multi_a	
+hw_defs.fs:h# 6702 constant multi_b
+hw_defs.fs:h# 6704 constant multi_init
+hw_defs.fs:h# 6706 constant multi_done
+hw_defs.fs:h# 6708 constant multi_pp_high
+hw_defs.fs:h# 670A constant multi_pp_low
+hw_defs.fs:h# 6800 constant div_a		
+hw_defs.fs:h# 6802 constant div_b
+hw_defs.fs:h# 6804 constant div_init
+hw_defs.fs:h# 6806 constant div_done
+hw_defs.fs:h# 6808 constant div_c
+hw_defs.fs:h# 6900 constant uart_status  \ 3'b0, tx_busy, 2'b0, rx_error, rx_avail
+hw_defs.fs:h# 6902 constant uart_data_rx \ Data received
+hw_defs.fs:h# 6904 constant uart_data_tx \ Data to trasnmit
+hw_defs.fs:h# 6906 constant uart_ctrl    \ 5'b0, LED, tx_wr, rx_ack
+j1.lst:\ split
+j1.lst:0052 202D           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:\ looptest
+j1.lst:00A0 2055           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:\ abs
+j1.lst:00F8 207F           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:\ cells
+j1.lst:\ /string
+j1.lst:\ sliteral
+j1.lst:01D0 4084           CALL cells 
+j1.lst:01D2 4084           CALL cells 
+j1.lst:\ swapdown
+j1.lst:\ swapdowns
+j1.lst:01DE 40ED           CALL swapdown 
+j1.lst:01E0 40ED           CALL swapdown 
+j1.lst:01E2 40ED           CALL swapdown 
+j1.lst:01E4 40ED           CALL swapdown 
+j1.lst:01E6 40ED           CALL swapdown 
+j1.lst:01E8 40ED           CALL swapdown 
+j1.lst:01EA 40ED           CALL swapdown 
+j1.lst:01EC 40ED           CALL swapdown 
+j1.lst:01EE 40ED           CALL swapdown 
+j1.lst:01F0 40ED           CALL swapdown 
+j1.lst:01F2 40ED           CALL swapdown 
+j1.lst:01F4 40ED           CALL swapdown 
+j1.lst:01F6 40ED           CALL swapdown 
+j1.lst:01F8 40ED           CALL swapdown 
+j1.lst:01FA 40ED           CALL swapdown 
+j1.lst:01FC 40ED           CALL swapdown 
+j1.lst:\ swapdown0
+j1.lst:0200 4084           CALL cells 
+j1.lst:\ 2swap
+j1.lst:025C 4122           CALL 2swap 
+j1.lst:0264 0122           BRANCH 2swap 
+j1.lst:0266 4084           CALL cells 
+j1.lst:0284 2146           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:\ s>d
+j1.lst:\ DABS
+j1.lst:02F8 2180           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:0306 4122           CALL 2swap 
+j1.lst:0348 4122           CALL 2swap 
+j1.lst:037C 4049           CALL looptest 
+j1.lst:039A 4049           CALL looptest 
+j1.lst:\ bounds
+j1.lst:03A8 41D0           CALL bounds 
+j1.lst:\ abssgn
+j1.lst:03E0 4075           CALL abs 
+j1.lst:03E4 4075           CALL abs 
+j1.lst:03EC 41EC           CALL abssgn 
+j1.lst:\ divstep
+j1.lst:03FA 4084           CALL cells 
+j1.lst:0406 4084           CALL cells 
+j1.lst:0410 2210           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:0426 41FD           CALL divstep 
+j1.lst:0428 41FD           CALL divstep 
+j1.lst:042A 41FD           CALL divstep 
+j1.lst:042C 41FD           CALL divstep 
+j1.lst:042E 41FD           CALL divstep 
+j1.lst:0430 41FD           CALL divstep 
+j1.lst:0432 41FD           CALL divstep 
+j1.lst:0434 41FD           CALL divstep 
+j1.lst:0436 41FD           CALL divstep 
+j1.lst:0438 41FD           CALL divstep 
+j1.lst:043A 41FD           CALL divstep 
+j1.lst:043C 41FD           CALL divstep 
+j1.lst:043E 41FD           CALL divstep 
+j1.lst:0440 41FD           CALL divstep 
+j1.lst:0442 41FD           CALL divstep 
+j1.lst:0444 41FD           CALL divstep 
+j1.lst:044E 4151           CALL s>d 
+j1.lst:\ SM/REM
+j1.lst:0458 415B           CALL DABS 
+j1.lst:045C 4075           CALL abs 
+j1.lst:0488 0229           BRANCH SM/REM 
+j1.lst:0498 4084           CALL cells 
+j1.lst:\ divisor
+j1.lst:04B0 4122           CALL 2swap 
+j1.lst:04E0 4049           CALL looptest 
+j1.lst:\ base
+j1.lst:\ #S
+j1.lst:058C 22C2           0BRANCH #S 
+j1.lst:\ SIGN
+j1.lst:\ uartbase
+j1.lst:\ space
+j1.lst:\ spaces
+j1.lst:0602 42FA           CALL space 
+j1.lst:0606 02FE           BRANCH spaces 
+j1.lst:\ asc_to_dec
+j1.lst:0620 2313           0BRANCH (else) 
+j1.lst:\ (else)
+j1.lst:0658 4049           CALL looptest 
+j1.lst:066E 4049           CALL looptest 
+j1.lst:0692 42FA           CALL space 
+j1.lst:0694 42FA           CALL space 
+j1.lst:069C 42FA           CALL space 
+j1.lst:06A0 4049           CALL looptest 
+j1.lst:06BA 42FA           CALL space 
+j1.lst:06C6 4049           CALL looptest 
+j1.lst:\ S.R
+j1.lst:06E0 42FE           CALL spaces 
+j1.lst:06EA 415B           CALL DABS 
+j1.lst:06EE 42C2           CALL #S 
+j1.lst:06F2 42CE           CALL SIGN 
+j1.lst:06F8 036E           BRANCH S.R 
+j1.lst:0702 4151           CALL s>d 
+j1.lst:070C 02FA           BRANCH space 
+j1.lst:0720 4151           CALL s>d 
+j1.lst:075A 23BC           0BRANCH (else) 
+j1.lst:075E 4122           CALL 2swap 
+j1.lst:076A 4151           CALL s>d 
+j1.lst:076E 4122           CALL 2swap 
+j1.lst:0772 4095           CALL /string 
+j1.lst:\ (else)
+j1.lst:\ .s
+j1.lst:07AA 42FA           CALL space 
+j1.lst:07AC 4049           CALL looptest 
+j1.lst:\ swab
+j1.lst:07D2 02FE           BRANCH spaces 
+j1.lst:\ rise?
+j1.lst:\ send_inc_addres
+j1.lst:088E 4049           CALL looptest 
+j1.lst:\ usar_dpRAM
+j1.lst:0942 40A0           CALL sliteral 
+j1.lst:095C 40A0           CALL sliteral 
+j1.lst:0978 40A0           CALL sliteral 
+j1.lst:0994 4305           CALL asc_to_dec 
+j1.lst:0998 4305           CALL asc_to_dec 
+j1.lst:099E 40A0           CALL sliteral 
+main.fs:include crossj1.fs
+main.fs:include basewords.fs
+main.fs:include hw_defs.fs
+main.fs:include nuc.fs
+main.fs:include app.fs
+main.fs:s" j1.mem" create-output-file
+main.fs:    4000 0 do i t@ s>d <# # # # # #> type cr 2 +loop
+main.fs:s" j1.lst" create-output-file
+main.fs:h# 2000 disassemble-block
+Makefile:	gforth -e 'include main.fs bye'
+Makefile:	rm -rf *.binle *.binbe *.binle *.lst *.h *.mem *.bin
+nuc.fs:( Nucleus: ANS Forth core and ext words      JCB 13:11 08/24/10)
+nuc.fs:0 constant false ( 6.2.1485 )
+nuc.fs:: depth dsp h# ff and ;
+nuc.fs:65535 constant true  ( 6.2.2298 )
+nuc.fs:: rot   >r swap r> swap ;
+nuc.fs:: -rot  swap >r swap r> ;
+nuc.fs:: tuck  swap over ;
+nuc.fs:: split                     ( a m -- a&m a&~m )
+nuc.fs:: c@    dup @ swap d# 1 and if d# 8 rshift else d# 255 and then ;
+nuc.fs:        swap h# ff and dup d# 8 lshift or swap
+nuc.fs:        tuck dup @ swap         ( c-addr u v c-addr )
+nuc.fs:        merge swap !
+nuc.fs:: looptest  ( -- FIN )
+nuc.fs:    else
+nuc.fs:        swap >r
+nuc.fs:    swap
+nuc.fs:\ Stack
+nuc.fs:: +!    tuck @ + swap ! ;
+nuc.fs:\ Comparisons
+nuc.fs:: >         swap < ;
+nuc.fs:: u>        swap u< ;
+nuc.fs:: abs       dup 0< if negate then ;
+nuc.fs:: ?:        ( xt xf f -- xt | xf) if drop else nip then ;
+nuc.fs:code cells end-code
+nuc.fs:code addrcells end-code
+nuc.fs:: 2*        d# 1 lshift ;
+nuc.fs:: 2/        d# 1 rshift ;
+nuc.fs:: c+!       tuck c@ + swap c! ;
+nuc.fs:: count     dup 1+ swap c@ ;
+nuc.fs:: /string   dup >r - swap r> + swap ;
+nuc.fs:: sliteral
+nuc.fs:    1down   scall   1up ubranch
+nuc.fs:    2down   scall   2up ubranch
+nuc.fs:    3down   scall   3up ubranch
+nuc.fs:    4down   scall   4up ubranch
+nuc.fs:    5down   scall   5up ubranch
+nuc.fs:    6down   scall   6up ubranch
+nuc.fs:    7down   scall   7up ubranch
+nuc.fs:    8down   scall   8up ubranch
+nuc.fs:    9down   scall   9up ubranch
+nuc.fs:    10down  scall   10up ubranch
+nuc.fs:    11down  scall   11up ubranch
+nuc.fs:    12down  scall   12up ubranch
+nuc.fs:    13down  scall   13up ubranch
+nuc.fs:    14down  scall   14up ubranch
+nuc.fs:    15down  scall   15up ubranch
+nuc.fs:: swapdown
+nuc.fs:    ]asm
+nuc.fs:    asm[
+nuc.fs:: swapdowns
+nuc.fs:    swapdown swapdown swapdown swapdown
+nuc.fs:    swapdown swapdown swapdown swapdown
+nuc.fs:    swapdown swapdown swapdown swapdown
+nuc.fs:    swapdown swapdown swapdown swapdown ;fallthru
+nuc.fs:: swapdown0 ;
+nuc.fs:    ['] swapdown0 swap - execute
+nuc.fs:    swap r> xor             \ a^c b^d
+nuc.fs:    dup @ swap 2+ @
+nuc.fs:: 2swap rot >r rot r> ;
+nuc.fs:: 2rot ( d1 d2 d3 -- d2 d3 d1 ) 2>r 2swap 2r> 2swap ;
+nuc.fs:    swap                    \  lo hi ... lo 2k+1
+nuc.fs:: d+                              ( augend . addend . -- sum . )
+nuc.fs:    over +                        ( augend sum)
+nuc.fs:    dup rot                       ( sum sum augend)
+nuc.fs:    u< if                         ( sum)
+nuc.fs:    else
+nuc.fs:    then                          ( sum . )
+nuc.fs:: +1c   \ one's complement add, as in TCP checksum
+nuc.fs:: s>d dup 0< ;
+nuc.fs:    invert swap invert swap
+nuc.fs:: DABS ( d -- ud ) ( 8.6.1.1160 ) DUP 0< IF DNEGATE THEN ;
+nuc.fs:    swap
+nuc.fs:: dand      rot and -rot and swap ;
+nuc.fs:: dor       rot or  -rot or  swap ;
+nuc.fs:: dinvert  invert swap invert swap ;
+nuc.fs:    else
+nuc.fs:: d> 2swap d< ;
+nuc.fs:: d2/ dup d# 15 lshift >r 2/ swap 2/ r> or swap ;
+nuc.fs:: dmax       2over 2over d< if 2swap then 2drop ;
+nuc.fs:        2+ swap 2+ swap
+nuc.fs:        1+ swap 1+ swap
+nuc.fs:: bounds ( a n -- a+n a ) OVER + SWAP ;
+nuc.fs:  >R  bounds
+nuc.fs:create scratch d# 2 allot
+nuc.fs:    scratch !
+nuc.fs:            scratch @ d# 0 d+
+nuc.fs:        else
+nuc.fs:[ELSE]
+nuc.fs:: abssgn    ( a b -- |a| |b| negf )
+nuc.fs:        2dup xor 0< >r abs swap abs swap r> ;
+nuc.fs:: m*    abssgn >r um* r> if dnegate then ;
+nuc.fs:: divstep
+nuc.fs:    ( divisor dq hi )
+nuc.fs:    swap 2* swap
+nuc.fs:    rot                     ( dq hi divisor )
+nuc.fs:        tuck                ( dq divisor hi divisor )
+nuc.fs:        swap                ( dq hi divisor )
+nuc.fs:        rot 1+              ( hi divisor dq )
+nuc.fs:        rot                 ( divisor dq hi )
+nuc.fs:    else
+nuc.fs:    divstep divstep divstep divstep
+nuc.fs:    divstep divstep divstep divstep
+nuc.fs:    divstep divstep divstep divstep
+nuc.fs:    divstep divstep divstep divstep
+nuc.fs:    rot drop swap
+nuc.fs:: /mod  >R S>D R> ;fallthru
+nuc.fs:: SM/REM ( d n -- r q ) ( 6.1.2214 ) ( symmetric )
+nuc.fs:  OVER >R >R  DABS R@ ABS UM/MOD
+nuc.fs:: */mod >R M* R> SM/REM ;
+nuc.fs:variable divisor
+nuc.fs:    divisor !
+nuc.fs:    tuck um* 2swap um*   ( hi. lo. )
+nuc.fs:    swap >r d# 0 d+ r>   ( m h l )
+nuc.fs:        dup divisor @ >= if
+nuc.fs:            divisor @ -
+nuc.fs:variable base
+nuc.fs:  d# 0 BASE @ UM/MOD >R BASE @ UM/MOD SWAP DIGIT HOLD R> ;
+nuc.fs:: #S ( d -- d ) ( 6.1.0050 ) BEGIN # 2DUP OR 0= UNTIL ;
+nuc.fs:: SIGN ( n -- ) ( 6.1.2210 ) 0< IF [CHAR] - HOLD THEN ;
+nuc.fs:\ d# 42000000 constant WB_CLOCK_FREQ
+nuc.fs:[ 48000000 17 12 */ ] constant WB_CLOCK_FREQ
+nuc.fs:: uartbase
+nuc.fs:    [ 4294967296. 115200 WB_CLOCK_FREQ m*/ drop h# ffffff00 and dup swap 16 rshift ] 2literal
+nuc.fs:    begin uart_status @ d# 16 < until
+nuc.fs:    begin uart_status @ d# 1 = until
+nuc.fs:' emit-uart is emit
+nuc.fs:d# 32 constant bl
+nuc.fs:: space bl emit ;
+nuc.fs:: spaces    begin dup 0> while space 1- repeat drop ;
+nuc.fs:: asc_to_dec
+nuc.fs:: hex1 d# 15 and dup d# 10 < if d# 48 else d# 55 then + emit-uart ;
+nuc.fs:    d# 4 rshift
+nuc.fs:    d# 8 rshift
+nuc.fs:        dup d# 15 and 0= if dup cr hex4 [char] : emit space space then
+nuc.fs:        dup c@ hex2 space 1+
+nuc.fs:        dup hex4 [char] : emit space dup @ hex4 cr 2+
+nuc.fs:: decimal d# 10 base ! ;
+nuc.fs:: hex d# 16 base ! ;
+nuc.fs:: S.R ( a u n -- ) OVER - SPACES TYPE ;
+nuc.fs:: D.R ( d n -- ) ( 8.6.1.1070 ) >R DUP >R DABS <# #S R> SIGN #> R> S.R ;
+nuc.fs:: U.R ( u n -- ) ( 6.2.2330 ) d# 0 SWAP D.R ;
+nuc.fs:: .R ( n n -- ) ( 6.2.0210 ) >R S>D R> D.R ;
+nuc.fs:: D. ( d -- ) ( 8.6.1.1060 ) d# 0 D.R SPACE ;
+nuc.fs:: . ( n -- ) ( 6.1.0180 ) BASE @ d# 10 XOR IF U. EXIT THEN S>D D. ;
+nuc.fs:: DIGIT? ( c base -- u f ) ( 0xA3 )
+nuc.fs:        over c@ base @ digit? if
+nuc.fs:            >r 2swap
+nuc.fs:            drop base @ um*
+nuc.fs:            r> s>d d+ 2swap
+nuc.fs:            d# 1 /string >number
+nuc.fs:        else
+nuc.fs:: .s
+nuc.fs:            i pick hex4 space
+nuc.fs:: endian dup d# 8 lshift swap d# 8 rshift or ;
+nuc.fs:: 2endian endian swap endian ;
+nuc.fs:: swab endian ;
+nuc.fs:: typepad ( c-addr u w )    over - >r type r> spaces ;
+nuc.fs:\ rise? and fall? act like ! - except that they leave a flag
+nuc.fs:\ that tells if the value rose or fell, respectively.
+nuc.fs:: rise?   ( u a -- f ) 2dup @ u> >r ! r> ;

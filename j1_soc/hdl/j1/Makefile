@@ -1,0 +1,58 @@
+TARGET          = j1
+PINS            = $(DESIGN).lpf
+SIMGEN_OPTIONS  = -p $(FPGA_ARCH) -lang $(LANGUAGE)
+IVERILOG        = iverilog
+MULT		= multiplier
+MULT_32		= multiplier/mult_32
+J1		= j1
+DIV		= divider
+DIV_16		= divider/div_16
+UART		= uart_lm
+dp_RAM		= dpRAM
+
+
+SRC             = \
+     $(TARGET).v dpram.v
+
+SIM_SRC = $(TARGET)_TB.v          \
+
+ 
+all: $(TARGET).bit
+
+remake:         clean-build all
+
+clean:
+	rm -rf *~ */*~ a.out *.log *.key *.edf *.json *.config *.vvp  *.svg *rpt
+	rm -rf *.bit
+
+cleanall: clean
+	rm -rf build simulation/work simulation/transcript  simulation/vsim.wlf simulation/$(DESIGN)_TB.vvp simulation/*
+
+#
+# Synthesis
+#
+
+$(TARGET).json: $(SRC)
+	yosys -p "verilog_defaults -push; verilog_defaults -add -defer; read_verilog $(SRC); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@" -l ${TARGET}.rpt
+
+$(TARGET)_out.config: $(TARGET).json
+#	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA256 --speed 6  --timing-allow-fail --seed 1 
+	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 
+
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
+
+${TARGET}.svf : ${TARGET}.bit
+
+svg: $(SRC)
+	yosys -p "prep -top ${TARGET}; write_json ${TARGET}.json" ${SRC}
+	netlistsvg ${TARGET}.json -o ${TARGET}.svg  #--skin default.svg
+
+iversim: 
+	$(IVERILOG) -gno-io-range-error -o $(TARGET)_TB.vvp $(VINCDIR) $(SRC) $(SIM_SRC) -s $(TARGET)_TB
+	vvp $(TARGET)_TB.vvp; 
+	gtkwave $(TARGET)_TB.vcd&
+
+configure: ${TARGET}.bit
+#	sudo openFPGALoader -b colorlight-ft232rl -m ${TARGET}.bit 
+	sudo openFPGALoader -c cmsisdap -m ${TARGET}.bit 
