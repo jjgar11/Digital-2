@@ -1,0 +1,64 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Mar  2 03:34:22 2023
+[*]
+[dumpfile] "/home/carlos/Academic/libro_digitales/code/lm32/sim_lattice/system_tb.vcd"
+[dumpfile_mtime] "Thu Mar  2 03:31:46 2023"
+[dumpfile_size] 1233248
+[savefile] "/home/carlos/Academic/libro_digitales/code/lm32/sim_lattice/test_soc.gtkw"
+[timestart] 0
+[size] 2736 1688
+[pos] -1 -1
+*-16.345213 53200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] system_tb.
+[treeopen] system_tb.dut.
+[treeopen] system_tb.dut.lm32_cpu.
+[treeopen] system_tb.dut.lm32_cpu.instruction_unit.
+[treeopen] system_tb.dut.lm32_cpu.load_store_unit.
+[treeopen] system_tb.dut.uart0.
+[sst_width] 356
+[signals_width] 456
+[sst_expanded] 1
+[sst_vpaned_height] 506
+@28
+system_tb.dut.led
+system_tb.dut.rst
+system_tb.dut.lm32i_stb
+@22
+system_tb.dut.lm32i_dat_r[31:0]
+system_tb.dut.lm32i_dat_w[31:0]
+system_tb.dut.lm32i_adr[31:0]
+@28
+system_tb.dut.lm32d_stb
+@820
+system_tb.dut.lm32d_dat_w[31:0]
+system_tb.dut.lm32d_dat_r[31:0]
+@22
+system_tb.dut.lm32d_adr[31:0]
+system_tb.dut.intr_n[31:0]
+@28
+system_tb.dut.uart0_stb
+system_tb.dut.timer0_stb
+system_tb.dut.uart0.tx_wr
+@22
+system_tb.dut.uart0.tx_data[7:0]
+@28
+system_tb.dut.uart0.tx_busy
+system_tb.dut.uart0.uart_txd
+@22
+system_tb.dut.lm32_cpu.load_store_unit.ram.write_address[9:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.addr_a[9:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.addr_b[9:0]
+@28
+system_tb.dut.lm32_cpu.instruction_unit.ram.ce_a
+system_tb.dut.lm32_cpu.instruction_unit.ram.ce_b
+@22
+system_tb.dut.lm32_cpu.instruction_unit.ram.di_a[31:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.di_b[31:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.do_a[31:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.do_b[31:0]
+system_tb.dut.lm32_cpu.instruction_unit.ram.ra_a[9:0]
+@23
+system_tb.dut.lm32_cpu.instruction_unit.ram.ra_b[9:0]
+[pattern_trace] 1
+[pattern_trace] 0

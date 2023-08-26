@@ -1,0 +1,65 @@
+TARGET=system
+RTL=./rtl
+
+SOURCES = system_conf.v system.v
+SOURCES += $(RTL)/lm32/lm32_adder.v  $(RTL)/lm32/lm32_addsub.v $(RTL)/lm32/lm32_cpu.v
+SOURCES += $(RTL)/lm32/lm32_dcache.v $(RTL)/lm32/lm32_debug.v $(RTL)/lm32/lm32_decoder.v
+SOURCES += $(RTL)/lm32/lm32_icache.v  $(RTL)/lm32/lm32_dp_ram.v 
+SOURCES += $(RTL)/lm32/lm32_instruction_unit.v $(RTL)/lm32/lm32_interrupt.v
+SOURCES += $(RTL)/lm32/lm32_jtag.v $(RTL)/lm32/lm32_load_store_unit.v
+SOURCES += $(RTL)/lm32/lm32_logic_op.v $(RTL)/lm32/lm32_mc_arithmetic.v
+SOURCES += $(RTL)/lm32/lm32_multiplier.v $(RTL)/lm32/lm32_ram.v $(RTL)/lm32/lm32_shifter.v
+#SOURCES += $(RTL)/lm32/lm32_simtrace.v 
+SOURCES += $(RTL)/lm32/lm32_top.v
+SOURCES += $(RTL)/wb_uart/wb_uart.v $(RTL)/wb_uart/uart.v  
+SOURCES += $(RTL)/wb_timer/wb_timer.v
+SOURCES += $(RTL)/wb_gpio/wb_gpio.v
+SOURCES += $(RTL)/wb_conbus/conbus.v $(RTL)/wb_conbus/conbus_arb.v
+SOURCES += $(RTL)/wb_bram/wb_bram.v $(RTL)/lm32/lm32_include.v     
+####################################################################
+# final targets
+
+OBJS= $(SOURCES)
+
+# TRELLIS=/usr/local/share/trellis
+
+# all: ${TARGET}.bit ${TARGET}.svf
+all: ${TARGET}-flash.svf
+
+$(TARGET).json: $(OBJS)
+	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
+
+
+$(TARGET)_out.config: $(TARGET).json
+#	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA256 --speed 6  --timing-allow-fail --seed 1 
+	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 
+
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
+
+${TARGET}.svf : ${TARGET}.bit
+
+svg: $(OBJS)
+	yosys -p "prep -top ${TARGET}; write_json ${TARGET}.json" ${OBJS}
+	netlistsvg ${TARGET}.json -o ${TARGET}.svg  #--skin default.svg
+	yosys -p "prep -top ${TARGET} -flatten; write_json ${TARGET}_flat.json" ${OBJS}
+	netlistsvg ${TARGET}_flat.json -o ${TARGET}_flat.svg  #--skin default.svg
+	
+
+configure: ${TARGET}.bit
+#	sudo openFPGALoader -b colorlight-ft232rl -m ${TARGET}.bit 
+	sudo openFPGALoader -c cmsisdap -m ${TARGET}.bit 
+clean:
+	/bin/rm -f *.svf *.bit *.config *.json *.ys *.log *rpt
+
+${TARGET}-flash.svf : ${TARGET}.bit
+	./bit_to_flash.py $(TARGET).bit ${TARGET}-flash.svf
+
+.PHONY: prog clean
+
+#  npm install -g nturley/netlistsvg  
+
+
+
+
+

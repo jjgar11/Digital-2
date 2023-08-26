@@ -1,0 +1,324 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9+4288 (git sha1 b2e97174, x86_64-conda_cos6-linux-gnu-gcc 1.24.0.133_b0863d8_dirty -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -fdebug-prefix-map=/home/runner/work/conda-eda/conda-eda/workdir/conda-env/conda-bld/yosys_1630451134687/work=/usr/local/src/conda/yosys-0.9_5586_gb2e97174 -fdebug-prefix-map=/home/carlos/miniconda3/envs/fpga=/usr/local/src/conda-prefix -fPIC -Os -fno-merge-constants)
+
+
+-- Running command `verilog_defaults -push; verilog_defaults -add -defer; read_verilog ../rtl/lm32/lm32_adder.v  ../rtl/lm32/lm32_addsub.v ../rtl/lm32/lm32_cpu.v ../rtl/lm32/lm32_dcache.v ../rtl/lm32/lm32_debug.v ../rtl/lm32/lm32_decoder.v ../rtl/lm32/lm32_icache.v  ../rtl/lm32/lm32_instruction_unit.v ../rtl/lm32/lm32_interrupt.v ../rtl/lm32/lm32_jtag.v ../rtl/lm32/lm32_load_store_unit.v ../rtl/lm32/lm32_logic_op.v ../rtl/lm32/lm32_mc_arithmetic.v ../rtl/lm32/lm32_multiplier.v ../rtl/lm32/lm32_ram.v ../rtl/lm32/lm32_shifter.v ../rtl/lm32/lm32_top.v ../rtl/wb_uart/wb_uart.v ../rtl/wb_uart/uart.v   ../rtl/wb_timer/wb_timer.v ../rtl/wb_gpio/wb_gpio.v ../rtl/wb_conbus/conbus.v ../rtl/wb_conbus/conbus_arb.v ../rtl/wb_bram/wb_bram.v tb_system.v system_conf.v ../system.v ../rtl/lm32/lm32_include.v; verilog_defaults -pop; attrmap -tocase keep -imap keep=true keep=1 -imap keep=false keep=0 -remove keep=0; synth_ecp5 -top  ; write_json synth -blif .blif' --
+
+1. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_adder.v
+Parsing Verilog input from `../rtl/lm32/lm32_adder.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_adder'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_addsub.v
+Parsing Verilog input from `../rtl/lm32/lm32_addsub.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_addsub'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_cpu.v
+Parsing Verilog input from `../rtl/lm32/lm32_cpu.v' to AST representation.
+Warning: Literal has a width of 3 bit, but value requires 4 bit. (../rtl/lm32/lm32_cpu.v:2310)
+Warning: Encountered `translate_off' comment! Such legacy hot comments are supported by Yosys, but are not part of any formal language specification. Using a portable and standards-compliant construct such as `ifdef is recommended!
+Storing AST representation for module `$abstract\lm32_cpu'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_dcache.v
+Parsing Verilog input from `../rtl/lm32/lm32_dcache.v' to AST representation.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_debug.v
+Parsing Verilog input from `../rtl/lm32/lm32_debug.v' to AST representation.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_decoder.v
+Parsing Verilog input from `../rtl/lm32/lm32_decoder.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_decoder'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_icache.v
+Parsing Verilog input from `../rtl/lm32/lm32_icache.v' to AST representation.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_instruction_unit.v
+Parsing Verilog input from `../rtl/lm32/lm32_instruction_unit.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_instruction_unit'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_interrupt.v
+Parsing Verilog input from `../rtl/lm32/lm32_interrupt.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_interrupt'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_jtag.v
+Parsing Verilog input from `../rtl/lm32/lm32_jtag.v' to AST representation.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_load_store_unit.v
+Parsing Verilog input from `../rtl/lm32/lm32_load_store_unit.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_load_store_unit'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_logic_op.v
+Parsing Verilog input from `../rtl/lm32/lm32_logic_op.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_logic_op'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_mc_arithmetic.v
+Parsing Verilog input from `../rtl/lm32/lm32_mc_arithmetic.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_mc_arithmetic'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_multiplier.v
+Parsing Verilog input from `../rtl/lm32/lm32_multiplier.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_multiplier'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_ram.v
+Parsing Verilog input from `../rtl/lm32/lm32_ram.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_ram'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_shifter.v
+Parsing Verilog input from `../rtl/lm32/lm32_shifter.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_shifter'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_top.v
+Parsing Verilog input from `../rtl/lm32/lm32_top.v' to AST representation.
+Storing AST representation for module `$abstract\lm32_top'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: ../rtl/wb_uart/wb_uart.v
+Parsing Verilog input from `../rtl/wb_uart/wb_uart.v' to AST representation.
+Storing AST representation for module `$abstract\wb_uart'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: ../rtl/wb_uart/uart.v
+Parsing Verilog input from `../rtl/wb_uart/uart.v' to AST representation.
+Storing AST representation for module `$abstract\uart'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: ../rtl/wb_timer/wb_timer.v
+Parsing Verilog input from `../rtl/wb_timer/wb_timer.v' to AST representation.
+Storing AST representation for module `$abstract\wb_timer'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: ../rtl/wb_gpio/wb_gpio.v
+Parsing Verilog input from `../rtl/wb_gpio/wb_gpio.v' to AST representation.
+Warning: Yosys has only limited support for tri-state logic at the moment. (../rtl/wb_gpio/wb_gpio.v:90)
+Storing AST representation for module `$abstract\wb_gpio'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: ../rtl/wb_conbus/conbus.v
+Parsing Verilog input from `../rtl/wb_conbus/conbus.v' to AST representation.
+Storing AST representation for module `$abstract\conbus'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: ../rtl/wb_conbus/conbus_arb.v
+Parsing Verilog input from `../rtl/wb_conbus/conbus_arb.v' to AST representation.
+Storing AST representation for module `$abstract\conbus_arb'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: ../rtl/wb_bram/wb_bram.v
+Parsing Verilog input from `../rtl/wb_bram/wb_bram.v' to AST representation.
+Storing AST representation for module `$abstract\wb_bram'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: tb_system.v
+Parsing Verilog input from `tb_system.v' to AST representation.
+Storing AST representation for module `$abstract\system_tb'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: system_conf.v
+Parsing Verilog input from `system_conf.v' to AST representation.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: ../system.v
+Parsing Verilog input from `../system.v' to AST representation.
+Storing AST representation for module `$abstract\system'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: ../rtl/lm32/lm32_include.v
+Parsing Verilog input from `../rtl/lm32/lm32_include.v' to AST representation.
+Successfully finished Verilog frontend.
+
+29. Executing ATTRMAP pass (move or copy attributes).
+
+Syntax error in command `synth_ecp5 -top':
+
+    synth_ecp5 [options]
+
+This command runs synthesis for ECP5 FPGAs.
+
+    -top <module>
+        use the specified module as top module
+
+    -blif <file>
+        write the design to the specified BLIF file. writing of an output file
+        is omitted if this parameter is not specified.
+
+    -edif <file>
+        write the design to the specified EDIF file. writing of an output file
+        is omitted if this parameter is not specified.
+
+    -json <file>
+        write the design to the specified JSON file. writing of an output file
+        is omitted if this parameter is not specified.
+
+    -run <from_label>:<to_label>
+        only run the commands between the labels (see below). an empty
+        from label is synonymous to 'begin', and empty to label is
+        synonymous to the end of the command list.
+
+    -noflatten
+        do not flatten design before synthesis
+
+    -dff
+        run 'abc'/'abc9' with -dff option
+
+    -retime
+        run 'abc' with '-dff -D 1' options
+
+    -noccu2
+        do not use CCU2 cells in output netlist
+
+    -nodffe
+        do not use flipflops with CE in output netlist
+
+    -nobram
+        do not use block RAM cells in output netlist
+
+    -nolutram
+        do not use LUT RAM cells in output netlist
+
+    -nowidelut
+        do not use PFU muxes to implement LUTs larger than LUT4s
+
+    -asyncprld
+        use async PRLD mode to implement DLATCH and DFFSR (EXPERIMENTAL)
+
+    -abc2
+        run two passes of 'abc' for slightly improved logic density
+
+    -abc9
+        use new ABC9 flow (EXPERIMENTAL)
+
+    -vpr
+        generate an output netlist (and BLIF file) suitable for VPR
+        (this feature is experimental and incomplete)
+
+    -nodsp
+        do not map multipliers to MULT18X18D
+
+
+The following commands are executed by this synthesis command:
+
+    begin:
+        read_verilog -lib -specify +/ecp5/cells_sim.v +/ecp5/cells_bb.v
+        hierarchy -check -top <top>
+
+    coarse:
+        proc
+        flatten
+        tribuf -logic
+        deminout
+        opt_expr
+        opt_clean
+        check
+        opt -nodffe -nosdff
+        fsm
+        opt
+        wreduce
+        peepopt
+        opt_clean
+        share
+        techmap -map +/cmp2lut.v -D LUT_WIDTH=4
+        opt_expr
+        opt_clean
+        techmap -map +/mul2dsp.v -map +/ecp5/dsp_map.v -D DSP_A_MAXWIDTH=18 -D DSP_B_MAXWIDTH=18  -D DSP_A_MINWIDTH=2 -D DSP_B_MINWIDTH=2  -D DSP_NAME=$__MUL18X18    (unless -nodsp)
+        chtype -set $mul t:$__soft_mul    (unless -nodsp)
+        alumacc
+        opt
+        memory -nomap
+        opt_clean
+
+    map_bram:    (skip if -nobram)
+        memory_bram -rules +/ecp5/brams.txt
+        techmap -map +/ecp5/brams_map.v
+
+    map_lutram:    (skip if -nolutram)
+        memory_bram -rules +/ecp5/lutrams.txt
+        techmap -map +/ecp5/lutrams_map.v
+
+    map_ffram:
+        opt -fast -mux_undef -undriven -fine
+        memory_map -iattr -attr !ram_block -attr !rom_block -attr logic_block -attr syn_ramstyle=auto -attr syn_ramstyle=registers -attr syn_romstyle=auto -attr syn_romstyle=logic
+        opt -undriven -fine
+
+    map_gates:
+        techmap -map +/techmap.v -map +/ecp5/arith_map.v
+        opt -fast
+        abc -dff -D 1    (only if -retime)
+
+    map_ffs:
+        opt_clean
+        dfflegalize -cell $_DFF_?_ 01 -cell $_DFF_?P?_ r -cell $_SDFF_?P?_ r [-cell $_DFFE_??_ 01 -cell $_DFFE_?P??_ r -cell $_SDFFE_?P??_ r] -cell $_DLATCH_?_ x [-cell $_DFFSR_?PP_ x]    ($_DFFSR_*_ only if -asyncprld, $_*DFFE_* only if not -nodffe)
+        zinit -all w:* t:$_DFF_?_ t:$_DFFE_??_ t:$_SDFF*    (only if -abc9 and -dff
+        techmap -D NO_LUT [-D ASYNC_PRLD] -map +/ecp5/cells_map.v
+        opt_expr -undriven -mux_undef
+        simplemap
+        ecp5_gsr
+        attrmvcp -copy -attr syn_useioff
+        opt_clean
+
+    map_luts:
+        abc          (only if -abc2)
+        techmap -map +/ecp5/latches_map.v    (skip if -asyncprld)
+        abc -dress -lut 4:7
+        clean
+
+    map_cells:
+        techmap -map +/ecp5/cells_map.v    (skip if -vpr)
+        opt_lut_ins -tech ecp5
+        clean
+
+    check:
+        autoname
+        hierarchy -check
+        stat
+        check -noinit
+        blackbox =A:whitebox
+
+    blif:
+        opt_clean -purge                                     (vpr mode)
+        write_blif -attr -cname -conn -param <file-name>     (vpr mode)
+        write_blif -gates -attr -param <file-name>           (non-vpr mode)
+
+    edif:
+        write_edif <file-name>
+
+    json:
+        write_json <file-name>
+
+ERROR: Command syntax error: Unknown option or option in arguments.
+> synth_ecp5 -top
+>            ^

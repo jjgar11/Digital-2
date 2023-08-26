@@ -1,0 +1,66 @@
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+Warning: Non-aligned word access. Address: 0xxxxxxxxx Time: 0.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_dp_ram.v:141: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+ERROR: ../rtl/lm32/lm32_ram.v:134: $readmemh: Unable to open ../../firmware/cain_loader/image.ram for reading.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.
+VCD info: dumpfile system_tb.vcd opened for output.

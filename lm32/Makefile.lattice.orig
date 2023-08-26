@@ -1,0 +1,74 @@
+TARGET=system
+
+SRC=                               \
+	system.v                        \
+	rtl/lac/lac.v                   \
+	rtl/lac/uart.v                  \
+	rtl/lac/dp_ram.v                \
+	rtl/lm32/lm32_cpu.v             \
+	rtl/lm32/lm32_instruction_unit.v	\
+	rtl/lm32/lm32_decoder.v         \
+	rtl/lm32/lm32_load_store_unit.v \
+	rtl/lm32/lm32_adder.v           \
+	rtl/lm32/lm32_addsub.v          \
+	rtl/lm32/lm32_logic_op.v        \
+	rtl/lm32/lm32_shifter.v         \
+	rtl/lm32/lm32_multiplier.v      \
+	rtl/lm32/lm32_mc_arithmetic.v   \
+	rtl/lm32/lm32_interrupt.v       \
+	rtl/lm32/lm32_ram.v             \
+	rtl/lm32/lm32_icache.v          \
+	rtl/lm32/lm32_dcache.v          \
+	rtl/wb_bram/wb_bram.v           \
+	rtl/wb_uart/wb_uart.v           \
+	rtl/wb_timer/wb_timer.v         \
+	rtl/wb_gpio/wb_gpio.v           \
+	rtl/wb_conbus/conbus.v          \
+	rtl/wb_conbus/conbus_arb.v      \
+	rtl/wb_sram/wb_sram32.v
+
+####################################################################
+# final targets
+
+OBJS= $(SRC)
+
+# TRELLIS=/usr/local/share/trellis
+
+# all: ${TARGET}.bit ${TARGET}.svf
+all: ${TARGET}-flash.svf
+
+$(TARGET).json: $(OBJS)
+	yosys -p "synth_ecp5 -json $@" $(OBJS)   
+
+$(TARGET)_out.config: $(TARGET).json
+	nextpnr-ecp5 --25k --package CABGA381 --speed 6 --json $< --textcfg $@ --lpf $(TARGET).lpf --freq 65 -l $(TARGET).log
+
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --svf ${TARGET}.svf $< $@
+
+${TARGET}.svf : ${TARGET}.bit
+
+svg: $(OBJS)
+	yosys -p "prep -top ${TARGET}; write_json ${TARGET}.json" ${OBJS}
+	netlistsvg ${TARGET}.json -o ${TARGET}.svg  #--skin default.svg
+	yosys -p "prep -top ${TARGET} -flatten; write_json ${TARGET}_flat.json" ${OBJS}
+	netlistsvg ${TARGET}_flat.json -o ${TARGET}_flat.svg  #--skin default.svg
+	
+
+configure: ${TARGET}.bit
+	sudo openFPGALoader -c cmsisdap -m ${TARGET}.bit 
+
+clean:
+	rm -f *.svf *.bit *.config *.json *.ys
+
+${TARGET}-flash.svf : ${TARGET}.bit
+	./bit_to_flash.py $(TARGET).bit ${TARGET}-flash.svf
+
+.PHONY: prog clean
+
+#  npm install -g nturley/netlistsvg  
+
+
+
+
+
