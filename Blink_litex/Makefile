@@ -1,5 +1,5 @@
-TARGET=cain_test
-TOP=cain_test
+TARGET=alpha_board
+TOP=alpha_board
 GATE_DIR=build/gateware
 SOFT_DIR=build/software
 LITEX_DIR=/home/alph4/litex/
@@ -17,6 +17,7 @@ all: gateware firmware
 
 ${GATE_DIR}/${TARGET}.bit:
 	./base.py
+	# ./base2.py --use-internal-osc --with-ethernet --build
 
 gateware: ${GATE_DIR}/${TARGET}.bit
 
@@ -29,7 +30,7 @@ litex_term: firmware
 	litex_term ${SERIAL} --kernel firmware/firmware.bin
 
 configure: ${GATE_DIR}/${TARGET}.bit
-	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${GATE_DIR}/${TARGET}.bit 
+	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${GATE_DIR}/${TARGET}.bit
 
 ${TARGET}.svg: 
 	#yosys -p "prep -top ${TOP}; write_json ${GATE_DIR}/${TARGET}_LOGIC_svg.json" ${GATE_DIR}/${TOP}.v ${RTL_CPU_DIR}/VexRiscv.v   #TOP_LEVEL_DIAGRAM

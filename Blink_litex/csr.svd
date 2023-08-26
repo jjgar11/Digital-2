@@ -3,7 +3,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
     <vendor>litex</vendor>
     <name>SOC</name>
-    <description><![CDATA[Litex SoC 2023-07-05 15:44:14]]></description>
+    <description><![CDATA[Litex SoC 2023-07-05 18:11:06]]></description>
 
     <addressUnitBits>8</addressUnitBits>
     <width>32</width>
@@ -113,7 +113,7 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
             <registers>
                 <register>
                     <name>IDENTIFIER_MEM</name>
-                    <description><![CDATA[8 x 40-bit memory]]></description>
+                    <description><![CDATA[8 x 42-bit memory]]></description>
                     <addressOffset>0x0000</addressOffset>
                     <resetValue>0x00</resetValue>
                     <size>32</size>
