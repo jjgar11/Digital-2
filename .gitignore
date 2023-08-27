@@ -57,3 +57,4 @@ dkms.conf
 *.lst
 *.vcd
 gowin
+openFPGALoader
