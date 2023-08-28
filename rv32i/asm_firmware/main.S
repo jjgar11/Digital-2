@@ -5,8 +5,8 @@
 .section .text
 .globl main
 main:
-	li		a0, 25		# A
-	li		a1, 11		# B
+	li		a0, 96		# A
+	li		a1, 38		# B
 	call	mult
 #	call	div
 #	addi	ra, ra, 0
@@ -18,7 +18,7 @@ putstring:
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
 	mv		t2, a0	
 .L1:    
-	lbu		a0, 0(t2)
+	lbu		a0, 0(gp)
 	addi	a0, a0, 0
 	beq		a0, zero, .L2
 	call	putchar

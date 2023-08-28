@@ -1,7 +1,3 @@
-.equ IO_BASE, 0x400000  
-.equ IO_LEDS, 4
-.equ IO_UART_DAT, 8
-.equ IO_UART_CNTL, 16
 .section .text
 .globl mult
 mult:	

@@ -39,21 +39,12 @@ convert:
 	add		t0, t3, 0
 .bcdascii:
 	li		t1, 0	# store res in ascii
-	li		t2, 9	# compare value (number or letter)
 	li		t5, 0
 .loop:
 	beq		t0, zero, .restore
 	li		t4, 0
 	andi	t4, t0, 0xF	# select 4 LSSB
-	bge		t4, t2, .letra
-	addi	t2, t2, 1
-	bge		t2, t4, .num
-.letra:
-	addi	t4, t4, 0x37
-	j		.cont
-.num:
 	addi	t4, t4, 0x30
-	addi	t2, t2, -1
 .cont:
 	srli	t0, t0, 4
 	sll		t4, t4, t5
