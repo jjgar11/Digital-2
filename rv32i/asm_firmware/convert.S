@@ -7,25 +7,37 @@ convert:
 #	sw		ra, 0(sp)   # (need to do that for functions that call functions)
 	addi	t0, a0, 0	# store binary res in t0
 .bincdb:
-	li		t0, 0x97	# Valor de prueba
+#	li		t0, 0x97	# Valor de prueba
 	li		t3, 0		# bcd num
-	li		t5, 4		# comparador
-	li		t6, 9		# Seleccionador de primer bit
+	li		t6, 15		# Seleccionador de primer bit
 .loop1:
 	li		t1, 1
 	sll		t1, t1, t6
-	and		t2, t1, t0	# selec bit t6
+	and		t2, t1, t0	# select bit t6
 	srl		t2, t2, t6	# desplaza bit a primer lugar
 	add		t3, t3, t2	# suma bit a res
-	andi	t4, t3, 0xF	# sel 4 bits para comparar
-	bge		t5, t4, .else1	# si 4 bits > 5 suma 3
-	addi	t3, t3, 3
+	beq		t6, zero, .save
+# aqui ya se puede usar t1 y t2
+.init_check:
+	li		t1, 0xF
+	li		t2, 4		# comparador
+	li		t5, 3
+.check:
+	beq		t1, zero, .else1
+	and		t4, t3, t1	# sel 4 bits para comparar
+	bge		t2, t4, .else1	# si 4 bits > 5 suma 3
+	add		t3, t3, t5
 .else1: 
+	slli	t1, t1, 4
+	slli	t2, t2, 4
+	slli	t5, t5, 4
+	bne		t1, zero, .check
 	slli	t3, t3, 1	# desplaza res
-	srli	t1, t1, 1
 	addi	t6, t6, -1
-	bne		t1, zero, .loop1
+	j		.loop1
+.save:
 	add		t0, t3, 0
+.bcdascii:
 	li		t1, 0	# store res in ascii
 	li		t2, 9	# compare value (number or letter)
 	li		t5, 0
