@@ -2,9 +2,6 @@
 .globl convert
 
 convert:
-#	addi	sp, sp, -4 # save ra on the stack
-#	addi	ra, ra, 0
-#	sw		ra, 0(sp)   # (need to do that for functions that call functions)
 	addi	t0, a0, 0	# store binary res in t0
 .bincdb:
 #	li		t0, 0x97	# Valor de prueba
@@ -53,7 +50,6 @@ convert:
 	j		.loop
 .restore:
 	addi	a0, t1, 0
-#	lw		ra, 0(sp)  # restore ra
 #	addi	ra, ra, 0
 #	addi sp,sp,4 # restore sp
 	ret

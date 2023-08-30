@@ -5,6 +5,8 @@
 .section .text
 .globl main
 main:
+	li   gp,IO_BASE
+	li   sp,0x400
 	li		a0, 96		# A
 	li		a1, 38		# B
 	call	mult
