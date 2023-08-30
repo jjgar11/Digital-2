@@ -7,8 +7,8 @@
 main:
 	li   gp,IO_BASE
 	li   sp,0x400
-	li		a0, 96		# A
-	li		a1, 38		# B
+	li		a0, 293		# A
+	li		a1, 144		# B
 	call	mult
 #	call	div
 	call	convert
