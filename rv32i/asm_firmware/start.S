@@ -52,7 +52,7 @@ putstring:
 	sw ra,0(sp)   # (need to do that for functions that call functions)
 	mv t2,a0	
 .L1:
-	lbu a0,0(gp)
+	lbu a0,0(t2)
 	beqz a0,.L2
 	call putchar
 	addi t2,t2,1	
