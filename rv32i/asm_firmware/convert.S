@@ -2,6 +2,8 @@
 .globl convert
 
 convert:
+	addi	sp, sp, -12
+	addi	s0, sp, 0
 	addi	t0, a0, 0	# store binary res in t0
 .bincdb:
 #	li		t0, 0x97	# Valor de prueba
@@ -35,21 +37,38 @@ convert:
 .save:
 	add		t0, t3, 0
 .bcdascii:
-	li		t1, 0	# store res in ascii
-	li		t5, 0
-.loop:
 	beq		t0, zero, .restore
-	li		t4, 0
-	andi	t4, t0, 0xF	# select 4 LSSB
+	li		t1, 0	# store res in ascii
+	li		t2, 0xF0000000
+	li		t3, 32
+	li		t5, 28
+	li		t6, 0
+.shiftascii:
+	and		t4, t0, t2	# select 4 MSSB
+	bne		t4, zero, .loop
+	srli	t2, t2, 4
+	addi	t5, t5, -4
+	j		.shiftascii
+.loop:
+	beq		t2, zero, .restore
+	and		t4, t0, t2	# select 4 MSSB
+	srl		t4, t4, t5
 	addi	t4, t4, 0x30
 .cont:
-	srli	t0, t0, 4
-	sll		t4, t4, t5
-	addi	t5, t5, 8
+	sll		t4, t4, t6
+	srli	t2, t2, 4
+	addi	t5, t5, -4
 	add		t1, t1, t4
+	addi	t6, t6, 8
+	beq		t6, t3, .changew
 	j		.loop
+.changew:
+	sw		t1, 0(s0)
+	addi	s0, s0, 4
+	li		t1, 0
+	li		t6, 0
+	bne		t2, zero, .loop
 .restore:
-	addi	a0, t1, 0
-#	addi	ra, ra, 0
-#	addi sp,sp,4 # restore sp
+	sw		t1, 0(s0)
+	addi	sp, sp, 12
 	ret
