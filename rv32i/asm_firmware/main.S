@@ -13,7 +13,16 @@ main:
 #	call	div
 	call	convert
 	call	putstring
-	j		.end
+blinker:	
+	li   t0, 1
+	sw   t0, IO_LEDS(gp)
+	call wait
+	li   t0, 0
+	sw   t0, IO_LEDS(gp)
+	call wait
+	la   a0, hello
+	call putstring
+	j    blinker
 putstring:
 	addi	sp, sp, -4 # save ra on the stack
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
@@ -28,5 +37,9 @@ putstring:
 	lw		ra, 0(sp)  # restore ra
 	addi	sp, sp, 4 # restore sp
 	ret
-.end:
-	ebreak
+
+
+.section .data
+hello:
+	.asciz "Hello, ASM world !\n\r"
+	
