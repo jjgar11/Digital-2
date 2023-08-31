@@ -46,6 +46,7 @@ firmware-clean:
 	make -C ./firmware/ -f Makefile clean
 
 clean: firmware-clean gateware-clean
+	rm -rf *.csv *.svd
 
 .PHONY: clean
    	
