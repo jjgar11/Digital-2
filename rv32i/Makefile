@@ -39,7 +39,7 @@ clean:
 cleanall:
 	make -C ./asm_firmware clean
 	make -C ./c_firmware clean
-	rm -rf impl obj_dir *svg a.out *.vcd
+	rm -rf impl obj_dir *svg a.out *.vcd *.json *.bit *.config *.rpt *.svf
 
 sim: 
 	rm -f a.out *.vcd
