@@ -58,3 +58,8 @@ dkms.conf
 *.vcd
 gowin
 openFPGALoader
+*.config
+*.bit
+*.rpt
+*.svf
+*.json
