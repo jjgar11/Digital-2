@@ -9,7 +9,7 @@ convert:
 #	li		t0, 0x97	# Valor de prueba
 	li		t3, 0		# bcd num
 	li		t6, 15		# Seleccionador de primer bit
-.loop1:
+.loop_convert:
 	li		t1, 1
 	sll		t1, t1, t6
 	and		t2, t1, t0	# select bit t6
@@ -33,7 +33,7 @@ convert:
 	bne		t1, zero, .check
 	slli	t3, t3, 1	# desplaza res
 	addi	t6, t6, -1
-	j		.loop1
+	j		.loop_convert
 .save:
 	add		t0, t3, 0
 .bcdascii:
@@ -45,11 +45,11 @@ convert:
 	li		t6, 0
 .shiftascii:
 	and		t4, t0, t2	# select 4 MSSB
-	bne		t4, zero, .loop
+	bne		t4, zero, .loop_verify
 	srli	t2, t2, 4
 	addi	t5, t5, -4
 	j		.shiftascii
-.loop:
+.loop_verify:
 	beq		t2, zero, .restore
 	and		t4, t0, t2	# select 4 MSSB
 	srl		t4, t4, t5
@@ -61,13 +61,13 @@ convert:
 	add		t1, t1, t4
 	addi	t6, t6, 8
 	beq		t6, t3, .changew
-	j		.loop
+	j		.loop_verify
 .changew:
 	sw		t1, 0(s0)
 	addi	s0, s0, 4
 	li		t1, 0
 	li		t6, 0
-	bne		t2, zero, .loop
+	bne		t2, zero, .loop_verify
 .restore:
 	sw		t1, 0(s0)
 	addi	sp, sp, 12
