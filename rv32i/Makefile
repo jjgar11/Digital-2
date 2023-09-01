@@ -1,5 +1,5 @@
-TARGET=colorlight_5a_75e
-TOP=colorlight_5a_75e
+#TARGET=colorlight_5a_75e
+#TOP=colorlight_5a_75e
 #TOP=blink
 #GATE_DIR=build/gateware
 #SOFT_DIR=build/software
@@ -7,12 +7,16 @@ TOP=colorlight_5a_75e
 #RTL_CPU_DIR=${LITEX_DIR}/pythondata-cpu-vexriscv/pythondata_cpu_vexriscv/verilog
 
 
-SERIAL?=/dev/ttyUSB0
+#SERIAL?=/dev/ttyUSB0
 
-NEXTPNR=nextpnr-ecp5
-CC=riscv64-unknown-elf-gcc
+#NEXTPNR=nextpnr-ecp5
+#CC=riscv64-unknown-elf-gcc
 
-OBJS+= soc_femto.v
+TARGET=SOC
+TOP=blink
+
+
+OBJS+= femtorv32_quark.v
 
 
 # TRELLIS=/usr/local/share/trellis
@@ -29,7 +33,10 @@ ${TARGET}.svf : ${TARGET}.bit
 
 
 .PHONY: clean
+.PHONY: cleanall
 clean:
+	rm -rf impl obj_dir *svg a.out *.vcd *.json *.bit *.config *.rpt *.svf
+cleanall:
 	make -C ./asm_firmware clean
 	make -C ./c_firmware clean
 	rm -rf impl obj_dir *svg a.out *.vcd
@@ -58,10 +65,18 @@ svg: $(OBJS)
 	yosys -p "prep -top ${TARGET} -flatten; write_json ${TARGET}_flat.json" ${OBJS}
 	netlistsvg ${TARGET}_flat.json -o ${TARGET}_flat.svg  #--skin default.svg
 
-configure: ${TARGET}.fs
-	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${GATE_DIR}/${TARGET}.bit
-	# sudo openFPGALoader -b tangprimer20k -m impl/pnr/project.fs
-	
+configure: ${TARGET}.bit
+	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${TARGET}.bit
+
+$(TARGET)_out.config: $(TARGET).json
+	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA256 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
+#	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
+
+$(TARGET).json: $(OBJS)
+	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
+
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
 
 
 
