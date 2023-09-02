@@ -4,11 +4,13 @@
 convert:
 	addi	sp, sp, -12
 	addi	s0, sp, 0
-	addi	t0, a0, 0	# store binary res in t0
+	addi	t0, a3, 0	# store binary res in t0
+	li		t3, 0		# bcd num
+	sw		t3, 0(s0)
+	sw		t3, 4(s0)
 .bincdb:
 #	li		t0, 0x97	# Valor de prueba
-	li		t3, 0		# bcd num
-	li		t6, 15		# Seleccionador de primer bit
+	li		t6, 26		# Seleccionador de primer bit
 .loop_convert:
 	li		t1, 1
 	sll		t1, t1, t6

@@ -7,15 +7,15 @@
 main:
 	li   gp,IO_BASE
 	li   sp,0x400
-	li		a0, 285		# A
-	li		a1, 15		# B
+	li		a1, 304835	# A
+	li		a2, 323	# B
 	call	mult
 	call	convert
 	call	putresult
 	call	div
 	call	convert
 	call	putresult
-	la   a0, hello
+	la		a3, hello
 	call putstring
 blinker:	
 	li   t0, 1
@@ -26,18 +26,18 @@ blinker:
 	call wait
 	j    blinker
 putstring:
-	addi sp,sp,-4 # save ra on the stack
-	sw ra,0(sp)   # (need to do that for functions that call functions)
-	mv t2,a0	
+	addi	sp, sp, -4 # save ra on the stack
+	sw		ra, 0(sp)   # (need to do that for functions that call functions)
+	mv		t2, a3
 .L1_putstring:
-	lbu a0,0(t2)
-	beqz a0,.L2_putstring
-	call putchar
-	addi t2,t2,1	
-	j .L1_putstring
+	lbu		a0, 0(t2)
+	beqz	a0, .L2_putstring
+	call	putchar
+	addi	t2, t2, 1
+	j		.L1_putstring
 .L2_putstring:
-	lw ra,0(sp)  # restore ra
-	addi sp,sp,4 # restore sp
+	lw		ra, 0(sp)  # restore ra
+	addi	sp, sp, 4 # restore sp
 	ret	
 
 putresult:
