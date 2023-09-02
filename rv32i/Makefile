@@ -78,6 +78,8 @@ $(TARGET).json: $(OBJS) asm_firmware/firmware.hex
 $(TARGET).bit: $(TARGET)_out.config
 	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
 
+asm_firmware/firmware.hex:
+	make -C asm_firmware
 
 
 # export PATH=$PATH:/home/carlos/Embedded/Gowin/IDE/bin
