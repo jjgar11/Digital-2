@@ -9,14 +9,21 @@ main:
 	li		sp,0x400
 	li		a1, 304835	# A
 	li		a2, 323	# B
+
+	la		a3, multi_res
+	call	putstring
 	call	mult
 	call	convert
 	call	putresult
+
+	la		a3, div_res
+	call	putstring
 	call	div
 	call	convert
 	call	putresult
-	la		a3, hello
-	call	putstring
+
+#	la		a3, hello
+#	call	putstring
 blinker:
 	li		t0, 1
 	sw		t0, IO_LEDS(gp)
@@ -63,3 +70,7 @@ putresult:
 .section .data
 hello:
 	.asciz "Hello, ASM world !\n\r"
+multi_res:
+	.asciz "El resultado de la multiplicacion es: "
+div_res:
+	.asciz "El resultado de la division es: "
