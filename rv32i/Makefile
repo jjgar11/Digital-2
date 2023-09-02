@@ -72,7 +72,7 @@ $(TARGET)_out.config: $(TARGET).json
 	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA256 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
 #	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
 
-$(TARGET).json: $(OBJS)
+$(TARGET).json: $(OBJS) asm_firmware/firmware.hex
 	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
 
 $(TARGET).bit: $(TARGET)_out.config
