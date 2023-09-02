@@ -5,8 +5,8 @@
 .section .text
 .globl main
 main:
-	li   gp,IO_BASE
-	li   sp,0x400
+	li		gp,IO_BASE
+	li		sp,0x400
 	li		a1, 304835	# A
 	li		a2, 323	# B
 	call	mult
@@ -16,15 +16,15 @@ main:
 	call	convert
 	call	putresult
 	la		a3, hello
-	call putstring
-blinker:	
-	li   t0, 1
-	sw   t0, IO_LEDS(gp)
-	call wait
-	li   t0, 0
-	sw   t0, IO_LEDS(gp)
-	call wait
-	j    blinker
+	call	putstring
+blinker:
+	li		t0, 1
+	sw		t0, IO_LEDS(gp)
+	call	wait
+	li		t0, 0
+	sw		t0, IO_LEDS(gp)
+	call	wait
+	j		blinker
 putstring:
 	addi	sp, sp, -4 # save ra on the stack
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
@@ -44,13 +44,13 @@ putresult:
 	addi	sp, sp, -4 # save ra on the stack
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
 	addi	s0, sp, -8
-.L1_putresult:    
+.L1_putresult:
 	lbu		a0, 0(s0)
 	beq		a0, zero, .L2_putresult
 	call	putchar
 	addi	s0, s0, 1
 	bne		s0, sp, .L1_putresult
-.L2_putresult:    
+.L2_putresult:
 	li		a0, 10
 	call	putchar
 	li		a0, 13
@@ -63,4 +63,3 @@ putresult:
 .section .data
 hello:
 	.asciz "Hello, ASM world !\n\r"
-	
