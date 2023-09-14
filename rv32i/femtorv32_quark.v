@@ -448,7 +448,6 @@ module SOC (
    );
    
    wire [31:0] RAM_rdata;
-   wire [29:0] mem_wordaddr = mem_addr[31:2];
    wire isIO  = mem_addr[22];
    wire isRAM = !isIO;
    wire mem_wstrb = |mem_wmask;
@@ -464,36 +463,57 @@ module SOC (
 
 
    // Memory-mapped IO in IO page, 1-hot addressing in word address.   
-   localparam IO_LEDS_bit      = 0;  // W five leds
-   localparam IO_UART_DAT_bit  = 1;  // W data to send (8 bits) 
-   localparam IO_UART_CNTL_bit = 2;  // R status. bit 9: busy sending
+   localparam IO_LEDS_bit      = 2;  // W five leds
+   localparam IO_UART_DAT_W_bit  = 3;  // W data to send (8 bits) 
+   localparam IO_UART_CNTL_bit = 4;  // R status. bit 9: busy sending
+   localparam IO_UART_DAT_R_bit = 5;  
    
    always @(posedge clk) begin
-      if(isIO & mem_wstrb & mem_wordaddr[IO_LEDS_bit]) begin
+      if(isIO & mem_wstrb & mem_addr[IO_LEDS_bit]) begin
 	 LEDS <= mem_wdata;
 	 $display("Value sent to LEDS: %b %d %d",mem_wdata,mem_wdata,$signed(mem_wdata));
       end
    end
 
-   wire uart_valid = isIO & mem_wstrb & mem_wordaddr[IO_UART_DAT_bit];
+   reg uart_ack = 0;
+   
+   always @(posedge clk) begin
+      if(isIO & mem_wstrb & mem_addr[IO_UART_DAT_R_bit]) begin
+         uart_ack <= mem_wdata;
+      end
+   end
+
+   wire uart_valid = isIO & mem_wstrb & mem_addr[IO_UART_DAT_W_bit];
+
+   wire data_available_rx;
+   wire [7:0] data_rx;
    wire uart_ready;
    
    corescore_emitter_uart #(
       .clk_freq_hz(25000000),
       .baud_rate(115200)			    
    ) UART(
-      .i_clk(clk),
-      .i_rst(!resetn),
-      .i_data(mem_wdata[7:0]),
-      .i_valid(uart_valid),
-      .o_ready(uart_ready),
-      .o_uart_tx(TXD)      			       
+      .clk(clk),
+      .rst(!resetn),
+	   .uart_rx(RXD),
+      .uart_tx(TXD),
+      .tx_data(mem_wdata[7:0]),
+      .tx_valid(uart_valid),
+      .tx_ready(uart_ready),
+      .rx_ack(uart_ack),
+	   .rx_valid(data_available_rx),
+	   .rx_data(data_rx)
    );
-
-   wire [31:0] IO_rdata = 
-	       mem_wordaddr[IO_UART_CNTL_bit] ? { 22'b0, !uart_ready, 9'b0}
-	                                      : 32'b0;
-   
+   reg [31:0] IO_rdata;
+   always @*
+   begin
+      case (mem_addr[IO_UART_DAT_R_bit:IO_UART_CNTL_bit])
+      2'b10 : IO_rdata = data_rx;
+      2'b01 : IO_rdata = { 22'b0, !uart_ready, data_available_rx, 8'b0};
+      default : IO_rdata = 0;
+      endcase
+   end
+          
    assign mem_rdata = isRAM ? RAM_rdata :
 	                      IO_rdata ;
    
