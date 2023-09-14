@@ -43,7 +43,7 @@ cleanall:
 
 sim: 
 	rm -f a.out *.vcd
-	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_iverilog.v soc_femto.v
+	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark_uart.v $(OBJS)
 	vvp a.out
 	gtkwave bench.vcd &
 
@@ -80,6 +80,9 @@ $(TARGET).bit: $(TARGET)_out.config
 
 asm_firmware/firmware.hex:
 	make -C asm_firmware
+
+firmware_words:
+	g++ -Ic_firmware/libfemtorv/include/ -DSTANDALONE_FEMTOELF -o firmware_words_src/firmware_words firmware_words_src/firmware_words.cpp c_firmware/libfemtorv/femto_elf.c
 
 
 # export PATH=$PATH:/home/carlos/Embedded/Gowin/IDE/bin
