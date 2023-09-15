@@ -14,12 +14,13 @@
 
 getchar:
 	li		t0, 1
-	li		t2, 1<<8
 	sw		t0, IO_UART_DAT_R(gp)
+	sw		zero, IO_UART_DAT_R(gp)
+	li		t2, 1<<8
 .confirm:
 	lw		t1,	IO_UART_CNTL(gp)
 	and		t1, t1, t2
 	beq		t1, zero, .confirm
-	sw		a0, IO_UART_DAT_R(gp)
+	lbu		a0, IO_UART_DAT_R(gp)
 	ret
 

@@ -6,7 +6,8 @@
 .section .text
 .globl test
 test:
-#	call	getchar
-	li		a0,35
+	li		gp,IO_BASE
+	li		sp,0x400
+	call	getchar
 	call	putchar
-	call	test
+	j		test
