@@ -9,7 +9,7 @@ parameter c_BIT_PERIOD     = 8600;
    reg i;
    reg RESET; 
    wire [4:0] LEDS;
-   reg  RXD = 1'b0;
+   reg  RXD = 1'b1;
    wire TXD;
 
 
@@ -70,8 +70,12 @@ always #(tck/2) CLK <= ~CLK;
     #80  RESET = 0;
     #160 RESET = 1;
     // Send a command to the UART (exercise Rx)
+    #(tck*100)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h3F);
+    #(tck*1000)
+    @(posedge CLK);
+    UART_WRITE_BYTE(8'h55);
     @(posedge CLK);
     #(tck*10000) $finish;
  end
