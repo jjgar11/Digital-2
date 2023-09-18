@@ -33,17 +33,18 @@ main:
 	call	div
 	call	convert
 	call	putresult
+	j		main
 
 #	la		a3, hello
 #	call	putstring
-blinker:
-	li		t0, 1
-	sw		t0, IO_LEDS(gp)
-	call	wait
-	li		t0, 0
-	sw		t0, IO_LEDS(gp)
-	call	wait
-	j		blinker
+# blinker:
+#	li		t0, 1
+#	sw		t0, IO_LEDS(gp)
+#	call	wait
+#	li		t0, 0
+#	sw		t0, IO_LEDS(gp)
+#	call	wait
+#	j		blinker
 
 getstring:
 	addi	sp, sp, -4 # save ra on the stack
@@ -52,7 +53,8 @@ getstring:
 	li		t0, 0		# result
 .L1_getstring:
 	call	getchar
-	li		t1, 10
+	call	putchar
+	li		t1, 13
 	beq		a0, t1, .end_get	# if char is enter (10) stops reading
 	addi	a1, t0, 0	
 	li		a2, 10
@@ -62,6 +64,8 @@ getstring:
 	add		t0, t0, a0
 	j		.L1_getstring
 .end_get:
+	li		a0, 10
+	call	putchar
 	sw		t0, 0(s0)	# save bin res to a0
 	lw		ra, 0(sp)	# restore ra
 	addi	sp, sp, 4	# restore sp
