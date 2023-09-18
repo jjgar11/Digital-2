@@ -3,7 +3,7 @@ module bench();
 // Want to interface to 115200 baud UART
 // 10000000 / 115200 = 87 Clocks Per Bit.
 parameter tck              = 100;
-parameter c_BIT_PERIOD     = 8600;
+parameter c_BIT_PERIOD     = 21500;
 
    reg CLK;
    reg i;
@@ -70,14 +70,30 @@ always #(tck/2) CLK <= ~CLK;
     #80  RESET = 0;
     #160 RESET = 1;
     // Send a command to the UART (exercise Rx)
-    #(tck*100)
+    #(tck*24000)
     @(posedge CLK);
-    UART_WRITE_BYTE(8'h3F);
-    #(tck*1000)
+    UART_WRITE_BYTE(8'h35);
+    #(tck*150)
     @(posedge CLK);
-    UART_WRITE_BYTE(8'h55);
+    UART_WRITE_BYTE(8'h37);
+    #(tck*150)
     @(posedge CLK);
-    #(tck*10000) $finish;
+    UART_WRITE_BYTE(8'h38);
+    #(tck*150)
+    @(posedge CLK);
+    UART_WRITE_BYTE(8'h0A);
+
+    #(tck*24000)
+    @(posedge CLK);
+    UART_WRITE_BYTE(8'h31);
+    #(tck*150)
+    @(posedge CLK);
+    UART_WRITE_BYTE(8'h34);
+    #(tck*150)
+    @(posedge CLK);
+    UART_WRITE_BYTE(8'h0A);
+    @(posedge CLK);
+    #(tck*100000) $finish;
  end
  
  
