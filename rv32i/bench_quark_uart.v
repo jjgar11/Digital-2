@@ -73,25 +73,25 @@ always #(tck/2) CLK <= ~CLK;
     #(tck*24000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h35);
-    #(tck*150)
+    #(tck*4000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h37);
-    #(tck*150)
+    #(tck*4000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h38);
-    #(tck*150)
+    #(tck*4000)
     @(posedge CLK);
-    UART_WRITE_BYTE(8'h0A);
+    UART_WRITE_BYTE(8'h0D);
 
-    #(tck*24000)
+    #(tck*28000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h31);
-    #(tck*150)
+    #(tck*4000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h34);
-    #(tck*150)
+    #(tck*4000)
     @(posedge CLK);
-    UART_WRITE_BYTE(8'h0A);
+    UART_WRITE_BYTE(8'h0D);
     @(posedge CLK);
     #(tck*100000) $finish;
  end
