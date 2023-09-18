@@ -9,7 +9,7 @@ main:
 	li		sp,0x400
 #	li		a1, 304835	# A
 #	li		a2, 323	# B
-	addi	s0, sp, -4
+	addi	s0, sp, -12
 
 	la		a3, input1
 	call	putstring
@@ -19,8 +19,8 @@ main:
 	call	putstring
 	call	getstring
 	
-	lw		a1, 0(s0)
-	lw		a2, 4(s0)
+	lw		a1, 4(s0)
+	lw		a2, 0(s0)
 
 	la		a3, multi_res
 	call	putstring
@@ -106,12 +106,12 @@ putresult:
 hello:
 	.asciz "Hello, ASM world !\n\r"
 multi_res:
-	.asciz "El resultado de la multiplicacion es: "
+	.asciz "Multi: "
 div_res:
-	.asciz "El resultado de la division es: "
+	.asciz "Div: "
 input1:
-	.asciz "Ingrese el primer operando: "
+	.asciz "Primero: "
 input2:
-	.asciz "Ingrese el segundo operando: "
-op:
-	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"
+	.asciz "Segundo: "
+# op:
+#	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"

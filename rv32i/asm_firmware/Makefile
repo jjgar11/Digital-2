@@ -10,7 +10,7 @@
 # *************************************************
 #OBJECTS =  wait.o putchar.o start.o #hello.o 
 #OBJECTS = for.o 
-OBJECTS = main.o multiplier.o divisor.o putchar.o getchar.o convert.o wait.o test.o
+OBJECTS = main.o multiplier.o divisor.o putchar.o getchar.o convert.o wait.o #test.o
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
 AS      = $(CROSS)-as
