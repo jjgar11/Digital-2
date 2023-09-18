@@ -7,8 +7,20 @@
 main:
 	li		gp,IO_BASE
 	li		sp,0x400
-	li		a1, 304835	# A
-	li		a2, 323	# B
+#	li		a1, 304835	# A
+#	li		a2, 323	# B
+	addi	s0, sp, -4
+
+	la		a3, input1
+	call	putstring
+	call	getstring
+
+	la		a3, input2
+	call	putstring
+	call	getstring
+	
+	lw		a1, 0(s0)
+	lw		a2, 4(s0)
 
 	la		a3, multi_res
 	call	putstring
@@ -32,6 +44,29 @@ blinker:
 	sw		t0, IO_LEDS(gp)
 	call	wait
 	j		blinker
+
+getstring:
+	addi	sp, sp, -4 # save ra on the stack
+	sw		ra, 0(sp)
+	addi	s0, s0, -4
+	li		t0, 0		# result
+.L1_getstring:
+	call	getchar
+	li		t1, 10
+	beq		a0, t1, .end_get	# if char is enter (10) stops reading
+	addi	a1, t0, 0	
+	li		a2, 10
+	call	mult		# multiply res in t0 by 10
+	addi	t0, a3, 0	# save mult in t0
+	addi	a0, a0, -0x30	# rest 0x30 to get number and add it to res
+	add		t0, t0, a0
+	j		.L1_getstring
+.end_get:
+	sw		t0, 0(s0)	# save bin res to a0
+	lw		ra, 0(sp)	# restore ra
+	addi	sp, sp, 4	# restore sp
+	ret
+
 putstring:
 	addi	sp, sp, -4 # save ra on the stack
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
@@ -74,3 +109,9 @@ multi_res:
 	.asciz "El resultado de la multiplicacion es: "
 div_res:
 	.asciz "El resultado de la division es: "
+input1:
+	.asciz "Ingrese el primer operando: "
+input2:
+	.asciz "Ingrese el segundo operando: "
+op:
+	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"
