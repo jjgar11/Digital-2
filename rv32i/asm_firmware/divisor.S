@@ -6,7 +6,7 @@ div:
 	li		t2, 32		# Contador N
 	li		t3, 0		# Auxiliar
 	li		t4, 0		# Resultado
-	li		t5, 0x80000000
+	li		t5, 1<<31
 .loop_div:
 # Corrimiento de A concatenado con DV 
 	and 	t6, t5, t0	# MSBB
