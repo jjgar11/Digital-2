@@ -6,7 +6,7 @@
 .globl main
 main:
 	li		gp,IO_BASE
-	li		sp,0x400
+	li		sp,0x1000
 #	li		a1, 304835	# A
 #	li		a2, 323	# B
 	addi	s0, sp, -12
@@ -110,12 +110,12 @@ putresult:
 hello:
 	.asciz "Hello, ASM world !\n\r"
 multi_res:
-	.asciz "Multi: "
+	.asciz "El resultado de la multiplicacion es: "
 div_res:
-	.asciz "Div: "
+	.asciz "El resultado de la division es: "
 input1:
-	.asciz "Primero: "
+	.asciz "Ingrese el primer operando: "
 input2:
-	.asciz "Segundo: "
-# op:
-#	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"
+	.asciz "Ingrese el segundo operando: "
+op:
+	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"
