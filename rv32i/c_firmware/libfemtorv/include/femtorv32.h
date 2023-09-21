@@ -85,7 +85,7 @@ int sd_writesector(uint32_t sector, uint8_t* buffer, uint32_t sector_count); /* 
 #define LEDS(val)         IO_OUT(IO_LEDS,val)
 
 #define FEMTOSOC_HAS_DEVICE(bit)  (IO_IN(IO_HW_CONFIG_DEVICES) & (1 << bit))
-#define FEMTORV32_FREQ            27000000
+#define FEMTORV32_FREQ            25000000
 #define FEMTORV32_COUNTER_BITS    (IO_IN(IO_HW_CONFIG_CPUINFO) & 127)
 
 

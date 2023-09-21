@@ -8,7 +8,7 @@
 # a:
 # COMMONFLAGS += -flto
 # *************************************************
-OBJECTS =  hello.o 
+OBJECTS =  calculator.o 
 #CROSS   = riscv64-unknown-elf
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
