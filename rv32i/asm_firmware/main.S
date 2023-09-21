@@ -10,6 +10,7 @@ main:
 #	li		a1, 304835	# A
 #	li		a2, 323	# B
 	addi	s0, sp, -12
+	addi	s1, s0, 0
 
 	la		a3, input1
 	call	putstring
@@ -18,21 +19,54 @@ main:
 	la		a3, input2
 	call	putstring
 	call	getstring
-	
-	lw		a1, 4(s0)
-	lw		a2, 0(s0)
 
-	la		a3, multi_res
+.select_option:
+	la		a3, op
+	call	putstring
+	call	getstring
+	lw		a1, -4(s1)
+	lw		a2, -8(s1)
+	lw		t0, -12(s1)
+	li		t1, 1
+	beq		t0, t1, .select_sum
+	addi	t1, t1, 1
+	beq		t0, t1, .select_res
+	addi	t1, t1, 1
+	beq		t0, t1, .select_mul
+	addi	t1, t1, 1
+	beq		t0, t1, .select_div
+	addi	s0, s0, 4
+	la		a3, error
+	call	putstring
+	j		.select_option
+
+.select_sum:
+	la		a3, sum_result
+	call	putstring
+	add		a3, a1, a2
+	j		.print_result
+.select_res:
+	la		a3, res_result
+	call	putstring
+	xor		a2, a2, -1
+	addi	a2, a2, 1
+	add		a3, a1, a2
+	j		.print_result
+.select_mul:
+	la		a3, multi_result
 	call	putstring
 	call	mult
-	call	convert
-	call	putresult
-
-	la		a3, div_res
+	j		.print_result
+.select_div:
+	la		a3, div_result
 	call	putstring
 	call	div
+	j		.print_result
+.print_result:
 	call	convert
 	call	putresult
+	li		a0, 10
+	call	putchar
 	j		main
 
 #	la		a3, hello
@@ -109,13 +143,19 @@ putresult:
 .section .data
 hello:
 	.asciz "Hello, ASM world !\n\r"
-multi_res:
+sum_result:
+	.asciz "El resultado de la suma es: "
+res_result:
+	.asciz "El resultado de la resta es: "
+multi_result:
 	.asciz "El resultado de la multiplicacion es: "
-div_res:
+div_result:
 	.asciz "El resultado de la division es: "
 input1:
 	.asciz "Ingrese el primer operando: "
 input2:
 	.asciz "Ingrese el segundo operando: "
+error:
+	.asciz "Ingrese una opcion valida.\n\r"
 op:
-	.asciz "Ingrese el numero de la operacion:\n\r1.Multiplicacion\n\r2.Division"
+	.asciz "\nSeleccione la operacion:\n\r1.Suma\n\r2.Resta\n\r3.Multiplicacion\n\r4.Division\n\n\r"

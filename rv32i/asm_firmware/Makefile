@@ -31,7 +31,7 @@ firmware.elf: $(OBJECTS)
 	chmod -x $@
 	
 firmware.hex: firmware.lst firmware_words
-	../firmware_words_src/firmware_words firmware.elf -ram 4096 -max_addr 4096  -out firmware.hex
+	../firmware_words_src/firmware_words firmware.elf -ram 8192 -max_addr 8192  -out firmware.hex
 
 firmware_words:
 	g++ -I../c_firmware/libfemtorv/include/ -DSTANDALONE_FEMTOELF -o ../firmware_words_src/firmware_words ../firmware_words_src/firmware_words.cpp ../c_firmware/libfemtorv/femto_elf.c
