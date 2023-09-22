@@ -30,7 +30,7 @@ all: firmware.hex
 	$(OBJCOPY) -O binary $< $@
 	chmod -x $@
 
-firmware.elf: $(OBJECTS) 
+firmware.elf: $(OBJECTS) crt0_baremetal.o
 	$(LD) $(LDFLAGS)  -Map firmware.map $(OBJECTS) -o $@  ${LIB_DIR}  ${LIBS}  
 	chmod -x $@
 	
@@ -39,6 +39,9 @@ firmware.hex: firmware.elf firmware.lst
 
 firmware.lst: firmware.elf
 	$(OBJDUMP) -h -S $< > $@
+
+crt0_baremetal.o:
+	make -C libfemtorv
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< 

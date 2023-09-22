@@ -39,11 +39,12 @@ clean:
 cleanall:
 	make -C ./asm_firmware clean
 	make -C ./c_firmware clean
+	make -C ./c_firmware/libfemtorv clean
 	rm -rf impl obj_dir *svg a.out *.vcd *.json *.bit *.config *.rpt *.svf
 
 sim: 
 	rm -f a.out *.vcd
-	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark_uart.v $(OBJS)
+	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark.v $(OBJS)
 	vvp a.out
 	gtkwave bench.vcd &
 
