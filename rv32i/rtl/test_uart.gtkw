@@ -1,24 +1,25 @@
 [*]
-[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sat Jul 29 16:51:47 2023
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Sep 29 08:03:18 2023
 [*]
-[dumpfile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/bench.vcd"
-[dumpfile_mtime] "Sat Jul 29 16:51:24 2023"
-[dumpfile_size] 13852129
-[savefile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/test_uart.gtkw"
-[timestart] 0
-[size] 2560 1531
+[dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
+[dumpfile_mtime] "Fri Sep 29 06:23:41 2023"
+[dumpfile_size] 276377844
+[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_uart.gtkw"
+[timestart] 5223000
+[size] 1920 1012
 [pos] -1 -1
-*-15.618584 38940 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.618584 7959000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
-[sst_width] 331
+[treeopen] bench.uut.per_uart.
+[sst_width] 226
 [signals_width] 346
 [sst_expanded] 1
-[sst_vpaned_height] 937
+[sst_vpaned_height] 261
 @22
-bench.uut.CPU.PC[31:0]
+bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
 @28
 bench.uut.mem_rstrb
@@ -62,7 +63,6 @@ bench.uut.mem_rdata[31:0]
 @22
 bench.uut.RAM.mem_wdata[31:0]
 bench.uut.RAM.mem_wmask[3:0]
-bench.uut.CPU.instr[31:0]
 @c00022
 [color] 3
 bench.uut.CPU.rs1[31:0]
@@ -103,11 +103,7 @@ bench.uut.CPU.rs1[31:0]
 -group_end
 @22
 [color] 3
-bench.uut.CPU.rs2Id[4:0]
-[color] 3
 bench.uut.CPU.rs2[31:0]
-[color] 3
-bench.uut.CPU.rs2Id[4:0]
 @c00022
 [color] 3
 bench.uut.CPU.rdId[4:0]
@@ -124,102 +120,32 @@ bench.uut.CPU.rdId[4:0]
 (4)bench.uut.CPU.rdId[4:0]
 @1401200
 -group_end
+@28
+bench.uut.CPU.writeBack
 @22
 [color] 3
 bench.uut.CPU.writeBackData[31:0]
+bench.uut.CPU.cycles[31:0]
 @28
-[color] 3
-bench.uut.CPU.writeBackEn
-@420
-[color] 2
-bench.uut.CPU.aluIn1[31:0]
-@c00420
-[color] 2
-bench.uut.CPU.aluIn2[31:0]
-@28
-[color] 1
-(0)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(1)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(2)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(3)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(4)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(5)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(6)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(7)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(8)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(9)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(10)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(11)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(12)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(13)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(14)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(15)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(16)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(17)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(18)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(19)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(20)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(21)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(22)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(23)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(24)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(25)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(26)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(27)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(28)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(29)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(30)bench.uut.CPU.aluIn2[31:0]
-[color] 1
-(31)bench.uut.CPU.aluIn2[31:0]
-@1401200
--group_end
-@420
-[color] 2
-bench.uut.CPU.aluOut[31:0]
-@28
-bench.uut.CPU.isALUreg
-bench.uut.CPU.isALUimm
-@29
-bench.uut.UART.i_valid
-@820
-bench.uut.UART.i_data[7:0]
-@28
-bench.uut.UART.o_uart_tx
+bench.uut.per_uart.uart0.rx_busy
+bench.uut.per_uart.uart0.rx_avail
 @22
-bench.uut.UART.cnt[8:0]
-bench.uut.UART.data[9:0]
+bench.uut.per_uart.uart0.rx_data[7:0]
+@820
+bench.uut.per_uart.uart0.tx_data[7:0]
+@22
+bench.uut.per_uart.uart0.txd_reg[7:0]
+bench.uut.per_uart.uart0.rx_count16[3:0]
 @28
-bench.uut.UART.o_ready
-bench.uut.UART.o_uart_tx
+bench.uut.per_uart.uart0.rx_ack
+bench.uut.per_uart.uart0.uart_txd
+bench.uut.per_uart.uart0.uart_rxd
+bench.uut.per_uart.uart0.uart_rxd1
+bench.uut.per_uart.uart0.uart_rxd2
+bench.uut.per_uart.uart0.tx_busy
+@29
+bench.uut.per_uart.uart0.tx_wr
+@22
+bench.uut.per_uart.d_out[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -26,7 +26,7 @@ firmware.elf: $(OBJECTS) crt0_baremetal.o
 	
 firmware.hex: firmware.elf firmware.lst firmware_words
 	../firmware_words_src/firmware_words firmware.elf -ram 8192 -max_addr 8192  -out firmware.hex
-	cp firmware.hex ../../rtl/c_firmware.hex
+	cp firmware.hex ../../rtl/
 
 firmware_words:
 	make -C ../firmware_words_src
