@@ -8,9 +8,8 @@
 # a:
 # COMMONFLAGS += -flto
 # *************************************************
-#OBJECTS =  wait.o putchar.o start.o #hello.o 
+OBJECTS = main.o multiplier.o divisor.o putchar.o getchar.o convert.o #wait.o test.o
 #OBJECTS = for.o 
-OBJECTS = main.o multiplier.o divisor.o putchar.o getchar.o convert.o wait.o test.o
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
 AS      = $(CROSS)-as
@@ -30,11 +29,12 @@ firmware.elf: $(OBJECTS)
 	$(LD) $(LDFLAGS) -T bram.ld  -m elf32lriscv -nostdlib -Map firmware.map -N -o $@ $(OBJECTS)
 	chmod -x $@
 	
-firmware.hex: firmware.lst firmware_words
+firmware.hex: firmware.elf firmware.lst firmware_words
 	../firmware_words_src/firmware_words firmware.elf -ram 8192 -max_addr 8192  -out firmware.hex
+	cp firmware.hex ../../rtl/asm_firmware.hex
 
 firmware_words:
-	g++ -I../c_firmware/libfemtorv/include/ -DSTANDALONE_FEMTOELF -o ../firmware_words_src/firmware_words ../firmware_words_src/firmware_words.cpp ../c_firmware/libfemtorv/femto_elf.c
+	make -C ../firmware_words_src
 
 firmware.lst: firmware.elf
 	$(OBJDUMP) -h -S $< > $@

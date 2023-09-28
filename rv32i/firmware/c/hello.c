@@ -1,8 +1,8 @@
 #include <femtorv32.h>
 
 int main() {
-    int k = 0;
-    int a = 0;
+    char k = 0;
+    char a = 0;
     for(k=1; k<= 10 ;k++)
         a = k + 2;
      /* Using: "libfemtorv/include/HardwareConfig_bits.h" (derived from "HardwareConfig_bits.v")

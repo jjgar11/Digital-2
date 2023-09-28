@@ -1,0 +1,65 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Sep 15 02:05:08 2023
+[*]
+[dumpfile] "/home/carlos/Embedded/litex_work/femtorv/basic/rtl/bench.vcd"
+[dumpfile_mtime] "Fri Sep 15 02:04:57 2023"
+[dumpfile_size] 43952870
+[savefile] "/home/carlos/Embedded/litex_work/femtorv/basic/rtl/sim_soc.gtkw"
+[timestart] 0
+[size] 2560 1531
+[pos] -1 -1
+*-19.000000 2364000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[treeopen] bench.uut.
+[treeopen] bench.uut.per_uart.
+[sst_width] 331
+[signals_width] 301
+[sst_expanded] 1
+[sst_vpaned_height] 457
+@22
+bench.uut.CPU.PC[23:0]
+@28
+bench.uut.CPU.clk
+@22
+bench.uut.RAM.mem_addr[31:0]
+bench.uut.RAM.mem_rdata[31:0]
+bench.uut.RAM.mem_wdata[31:0]
+bench.uut.RAM.mem_wmask[3:0]
+@28
+bench.uut.per_uart.rd
+bench.uut.per_uart.wr
+@c00022
+bench.uut.cs[5:0]
+@28
+(0)bench.uut.cs[5:0]
+(1)bench.uut.cs[5:0]
+(2)bench.uut.cs[5:0]
+(3)bench.uut.cs[5:0]
+(4)bench.uut.cs[5:0]
+(5)bench.uut.cs[5:0]
+@1401200
+-group_end
+@28
+[color] 3
+bench.uut.per_uart.cs
+@24
+[color] 3
+bench.uut.per_uart.uart_ctrl[7:0]
+@820
+[color] 3
+bench.uut.per_uart.d_in_uart[7:0]
+@28
+[color] 3
+bench.uut.per_uart.s[1:0]
+bench.uut.per_uart.uart0.uart_rxd
+bench.uut.per_uart.uart_tx
+[color] 2
+bench.uut.per_uart.uart0.rx_ack
+[color] 2
+bench.uut.per_uart.uart0.tx_wr
+bench.uut.per_uart.ledout
+@23
+bench.uut.per_uart.uart0.rx_data[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
