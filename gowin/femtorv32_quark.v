@@ -33,7 +33,7 @@
 `define NRV_ARCH     "rv32i"
 `define NRV_ABI      "ilp32"
 `define NRV_OPTIMIZE "-Os"
-
+`include "emitter_uart.v"
 module FemtoRV32(
    input 	 clk,
 
@@ -390,31 +390,121 @@ module FemtoRV32(
 
 endmodule
 
-/*****************************************************************************/
-// Notes:
-//
-// [1] About the "reverse case" statement, also used in Claire Wolf's picorv32:
-// It is just a cleaner way of writing a series of cascaded if() statements,
-// To understand it, think about the case statement *in general* as follows:
-// case (expr)
-//       val_1: statement_1
-//       val_2: statement_2
-//   ... val_n: statement_n
-// endcase
-// The first statement_i such that expr == val_i is executed.
-// Now if expr is 1'b1:
-// case (1'b1)
-//       cond_1: statement_1
-//       cond_2: statement_2
-//   ... cond_n: statement_n
-// endcase
-// It is *exactly the same thing*, the first statement_i such that
-// expr == cond_i is executed (that is, such that 1'b1 == cond_i,
-// in other words, such that cond_i is true)
-// More on this:
-//     https://stackoverflow.com/questions/15418636/case-statement-in-verilog
-//
-// [2] state uses 1-hot encoding (at any time, state has only one bit set to 1).
-// It uses a larger number of bits (one bit per state), but often results in
-// a both more compact (fewer LUTs) and faster state machine.
 
+module Memory (
+   input             clk,
+   input      [31:0] mem_addr,  // address to be read
+   output reg [31:0] mem_rdata, // data read from memory
+   input   	     mem_rstrb, // goes high when processor wants to read
+   input      [31:0] mem_wdata, // data to be written
+   input      [3:0]  mem_wmask	// masks for writing the 4 bytes (1=write byte) 
+);
+
+   reg [31:0] MEM [0:2047];    // Modificar .equ IO_HW_CONFIG_RAM, 8192  (2048 palabras de 32 bits = 2048 * 4 bytes) en libfemtorv/include/HardwareConfig_bits.inc 
+
+   initial begin
+       $readmemh("./asm_firmware/firmware.hex",MEM);
+//       $readmemh("./c_firmware/firmware.hex",MEM);
+   end
+
+   wire [29:0] word_addr = mem_addr[31:2];
+   
+   always @(posedge clk) begin
+      if(mem_rstrb) begin
+         mem_rdata <= MEM[word_addr];
+      end
+      if(mem_wmask[0]) MEM[word_addr][ 7:0 ] <= mem_wdata[ 7:0 ];
+      if(mem_wmask[1]) MEM[word_addr][15:8 ] <= mem_wdata[15:8 ];
+      if(mem_wmask[2]) MEM[word_addr][23:16] <= mem_wdata[23:16];
+      if(mem_wmask[3]) MEM[word_addr][31:24] <= mem_wdata[31:24];	 
+   end
+endmodule
+
+module SOC (
+    input 	     clk, // system clock 
+    input 	     resetn, // reset button
+    output reg [4:0] LEDS, // system LEDs
+    input 	     RXD, // UART receive
+    output 	     TXD         // UART transmit
+);
+
+
+   wire [31:0] mem_addr;
+   wire [31:0] mem_rdata;
+   wire mem_rstrb;
+   wire [31:0] mem_wdata;
+   wire [3:0]  mem_wmask;
+
+   FemtoRV32 CPU(
+      .clk(clk),
+      .reset(resetn),		 
+      .mem_addr(mem_addr),
+      .mem_rdata(mem_rdata),
+      .mem_rstrb(mem_rstrb),
+      .mem_wdata(mem_wdata),
+      .mem_wmask(mem_wmask),
+      .mem_rbusy(1'b0),
+      .mem_wbusy(1'b0)
+   );
+   
+   wire [31:0] RAM_rdata;
+   wire [29:0] mem_wordaddr = mem_addr[31:2];
+   wire isIO  = mem_addr[22];
+   wire isRAM = !isIO;
+   wire mem_wstrb = |mem_wmask;
+   
+   Memory RAM(
+      .clk(clk),
+      .mem_addr(mem_addr),
+      .mem_rdata(RAM_rdata),
+      .mem_rstrb(isRAM & mem_rstrb),
+      .mem_wdata(mem_wdata),
+      .mem_wmask({4{isRAM}}&mem_wmask)
+   );
+
+
+   // Memory-mapped IO in IO page, 1-hot addressing in word address.   
+   localparam IO_LEDS_bit      = 0;  // W five leds
+   localparam IO_UART_DAT_bit  = 1;  // W data to send (8 bits) 
+   localparam IO_UART_CNTL_bit = 2;  // R status. bit 9: busy sending
+   
+   always @(posedge clk) begin
+      if(isIO & mem_wstrb & mem_wordaddr[IO_LEDS_bit]) begin
+	 LEDS <= mem_wdata;
+	 $display("Value sent to LEDS: %b %d %d",mem_wdata,mem_wdata,$signed(mem_wdata));
+      end
+   end
+
+   wire uart_valid = isIO & mem_wstrb & mem_wordaddr[IO_UART_DAT_bit];
+   wire uart_ready;
+   
+   corescore_emitter_uart #(
+      .clk_freq_hz(27000000),
+      .baud_rate(115200)			    
+   ) UART(
+      .i_clk(clk),
+      .i_rst(!resetn),
+      .i_data(mem_wdata[7:0]),
+      .i_valid(uart_valid),
+      .o_ready(uart_ready),
+      .o_uart_tx(TXD)      			       
+   );
+
+   wire [31:0] IO_rdata = 
+	       mem_wordaddr[IO_UART_CNTL_bit] ? { 22'b0, !uart_ready, 9'b0}
+	                                      : 32'b0;
+   
+   assign mem_rdata = isRAM ? RAM_rdata :
+	                      IO_rdata ;
+   
+   
+`ifdef BENCH
+   always @(posedge clk) begin
+      if(uart_valid) begin
+	 $write("%c", mem_wdata[7:0] );
+	 $fflush(32'h8000_0001);
+      end
+   end
+`endif
+
+endmodule

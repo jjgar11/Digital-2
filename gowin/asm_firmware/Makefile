@@ -9,7 +9,7 @@
 # COMMONFLAGS += -flto
 # *************************************************
 OBJECTS =  wait.o putchar.o start.o #hello.o 
-#CROSS   = riscv64-unknown-elf
+#OBJECTS =  for.o 
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
 AS      = $(CROSS)-as
@@ -40,7 +40,7 @@ firmware.lst: firmware.elf
 %.o: %.S
 	$(AS) $(AFLAGS) -c $< -o $@
 clean:
-	rm -rf  $(OBJECTS) *.elf *.bin .*~ *~ *.map *.d *.hex
+	rm -rf  $(OBJECTS) *.elf *.bin .*~ *~ *.map *.d *.hex *.o *.lst
 .PHONY: clean
 
 

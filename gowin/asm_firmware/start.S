@@ -8,37 +8,45 @@
 .globl put_hello
 
 start:
-        li   t0, 10
-        li   t1, 5
-        add  t0,t1, t0
         li   gp,IO_BASE
 	li   sp,0x400
 blinker:	
-	li   t0, 46
+	li   t0, 62
+	li   a2, 30
+	call wait
+	li   t0, 61
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 45
+	li   t0, 59
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 43
+	li   t0, 55
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 39
+	li   t0, 47
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 43
+	li   t0, 31
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 45
+	li   t0, 47
 	sw   t0, IO_LEDS(gp)
 	call wait
-	li   t0, 46
+	li   t0, 55
 	sw   t0, IO_LEDS(gp)
 	call wait
-put_hello:
+	li   t0, 59
+	sw   t0, IO_LEDS(gp)
+	call wait
+	li   t0, 61
+	sw   t0, IO_LEDS(gp)
+	call wait
+	li   t0, 62
+	sw   t0, IO_LEDS(gp)
+	call wait
 	la   a0, hello
 	call putstring
-	ret
+	j    blinker
 putstring:
 	addi sp,sp,-4 # save ra on the stack
 	sw ra,0(sp)   # (need to do that for functions that call functions)
@@ -50,12 +58,10 @@ putstring:
 	j .L1
 .L2:    lw ra,0(sp)  # restore ra
 	addi sp,sp,4 # restore sp
-	
-	j    blinker
-		
+	ret	
 #	ebreak
 
 .section .data
 hello:
-	.asciz "Hello, world !\n\r"
+	.asciz "Hello, ASM world !\n\r"
 	

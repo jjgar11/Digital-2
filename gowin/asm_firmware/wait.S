@@ -2,11 +2,10 @@
 .globl wait
 
 wait:
-        li t0,1
-#	slli t0, t0,19
-	slli t0, t0,10
+        li t3,1
+	slli t3, t3,17
 .L0:       
-        addi t0,t0,-1
-	bnez t0, .L0
+        addi t3,t3,-1
+	bnez t3, .L0
 	ret
 
