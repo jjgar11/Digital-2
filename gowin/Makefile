@@ -1,7 +1,8 @@
 TARGET=SOC
 TOP=blink
 
-OBJS+= soc_femto.v
+
+OBJS+= femtorv32_quark.v
 
 
 # TRELLIS=/usr/local/share/trellis
@@ -17,7 +18,7 @@ $(TARGET).fs:
 ${TARGET}.svf : ${TARGET}.bit
 
 clean:
-	rm -rf impl obj_dir *svg a.out *.vcd
+	rm -rf impl obj_dir *svg a.out *.vcd *.json *.bit
 
 sim: 
 	rm -f a.out *.vcd
@@ -46,7 +47,24 @@ svg: $(OBJS)
 
 configure: ${TARGET}.fs
 	sudo openFPGALoader -b tangprimer20k -m impl/pnr/project.fs
-	
+
+
+
+$(TARGET)_out.config: $(TARGET).json
+	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA256 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
+#	nextpnr-ecp5 --json $< --lpf $(TARGET).lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
+
+
+$(TARGET).json: $(OBJS)
+	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
+
+
+$(TARGET).bit: $(TARGET)_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
+
+configure_lattice: ${TARGET}.bit   # TDI:TDO:TCK:TMS
+#	sudo openFPGALoader -c ft232RL --pins=1:2:0:3 -m ${TARGET}.bit 	
+	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${TARGET}.bit 	
 
 .PHONY: clean
 

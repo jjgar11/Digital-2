@@ -12,7 +12,7 @@ start:
 	li   sp,0x400
 blinker:	
 	li   t0, 62
-	li   a2, 30
+	sw   t0, IO_LEDS(gp)
 	call wait
 	li   t0, 61
 	sw   t0, IO_LEDS(gp)

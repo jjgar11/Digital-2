@@ -38,7 +38,7 @@ always #(tck/2) CLK <= ~CLK;
     #0   RESET = 0;
     #80  RESET = 0;
     #160 RESET = 1;
-    #(tck*1000) $finish;
+    #(tck*10000) $finish;
  end
  
  

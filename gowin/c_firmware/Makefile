@@ -1,13 +1,3 @@
-# *************************************************
-# IMPORTANTE PARA PODER COMPILAR ESTE EJEMPLO:
-# En el aechivo:litex/litex/soc/software/common.mak
-# cambiar de:
-# ifeq ($(LTO), 1)
-# COMMONFLAGS += -flto
-# endif
-# a:
-# COMMONFLAGS += -flto
-# *************************************************
 OBJECTS =  hello.o 
 #CROSS   = riscv64-unknown-elf
 CROSS   = riscv32-unknown-elf
