@@ -56,7 +56,6 @@ dkms.conf
 .vscode
 *.lst
 *.vcd
-gowin
 openFPGALoader
 *.config
 *.bit
