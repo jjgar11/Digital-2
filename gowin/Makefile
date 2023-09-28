@@ -3,6 +3,7 @@ TOP=blink
 
 
 OBJS+= femtorv32_quark.v
+#OBJS+= quark_soc.v
 
 
 # TRELLIS=/usr/local/share/trellis
@@ -58,6 +59,8 @@ $(TARGET)_out.config: $(TARGET).json
 $(TARGET).json: $(OBJS)
 	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
 
+firmware_words:
+	g++ -I./c_firmware/libfemtorv/include/ -DSTANDALONE_FEMTOELF -o firmware_words ./firmware_words_src/firmware_words.cpp ./c_firmware/libfemtorv/femto_elf.c
 
 $(TARGET).bit: $(TARGET)_out.config
 	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
@@ -65,6 +68,20 @@ $(TARGET).bit: $(TARGET)_out.config
 configure_lattice: ${TARGET}.bit   # TDI:TDO:TCK:TMS
 #	sudo openFPGALoader -c ft232RL --pins=1:2:0:3 -m ${TARGET}.bit 	
 	sudo openFPGALoader -c ft232RL --pins=RXD:RTS:TXD:CTS -m ${TARGET}.bit 	
+	
+
+
+$(TARGET)_i5.json: $(OBJS)
+	yosys -p 'verilog_defaults -push; verilog_defaults -add -defer; read_verilog -formal $(OBJS); verilog_defaults -pop; attrmap -tocase keep -imap keep="true" keep=1 -imap keep="false" keep=0 -remove keep=0; synth_ecp5 -top $(TARGET); write_json $@' -l ${TARGET}.rpt
+
+$(TARGET)_i5_out.config: $(TARGET)_i5.json
+	nextpnr-ecp5 --json $< --lpf $(TARGET)_i5.lpf --textcfg $@ --25k --package CABGA381 --speed 6  --timing-allow-fail --seed 1 --lpf-allow-unconstrained
+
+$(TARGET)_i5.bit: $(TARGET)_i5_out.config
+	ecppack --bootaddr 0 --compress $< --svf ${TARGET}.svf --bit $@
+
+configure_i5: ${TARGET}_i5.bit   # TDI:TDO:TCK:TMS
+	sudo openFPGALoader -b colorlight-i5 -m ${TARGET}_i5.bit 
 
 .PHONY: clean
 

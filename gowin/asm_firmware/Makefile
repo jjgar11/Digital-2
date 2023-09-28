@@ -8,7 +8,7 @@
 # a:
 # COMMONFLAGS += -flto
 # *************************************************
-OBJECTS =  wait.o putchar.o start.o #hello.o 
+OBJECTS =  bin_to_bcd.o mult.o div.o wait.o putchar.o getchar.o calculator.o #hello.o 
 #OBJECTS =  for.o 
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
@@ -30,7 +30,7 @@ firmware.elf: $(OBJECTS)
 	chmod -x $@
 	
 firmware.hex: firmware.elf firmware.lst
-	../firmware_words firmware.elf -ram 1024 -max_addr 1024  -out firmware.hex
+	../firmware_words firmware.elf -ram 16384 -max_addr 16384  -out firmware.hex
 
 firmware.lst: firmware.elf
 	$(OBJDUMP) -h -S $< > $@

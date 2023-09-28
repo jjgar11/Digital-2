@@ -1,6 +1,9 @@
-
 module bench();
-   parameter tck              = 40;
+// Testbench uses a 10 MHz clock
+// Want to interface to 115200 baud UART
+// 25000000 / 115200 = 217 Clocks Per Bit.
+parameter tck              = 40;
+parameter c_BIT_PERIOD     = 8680;
 
    reg CLK;
    reg i;
@@ -9,6 +12,34 @@ module bench();
    reg  RXD = 1'b0;
    wire TXD;
 
+
+
+  // Takes in input byte and serializes it 
+  task UART_WRITE_BYTE;
+    input [7:0] i_Data;
+    integer     ii;
+    begin
+       
+      // Send Start Bit
+      RXD <= 1'b0;
+      #(c_BIT_PERIOD);
+      #1000;
+       
+       
+      // Send Data Byte
+      for (ii=0; ii<8; ii=ii+1)
+        begin
+          RXD <= i_Data[ii];
+          #(c_BIT_PERIOD);
+        end
+       
+      // Send Stop Bit
+      RXD <= 1'b1;
+      #(c_BIT_PERIOD);
+     end
+  endtask // UART_WRITE_BYTE
+  
+  
    SOC uut(
      .clk(CLK),
      .resetn(RESET),
@@ -34,11 +65,19 @@ always #(tck/2) CLK <= ~CLK;
    initial
  begin
     $dumpfile("bench.vcd");
-    $dumpvars(0,bench);
+    $dumpvars(-1,bench);
+    #0   RXD   = 1;
     #0   RESET = 0;
     #80  RESET = 0;
     #160 RESET = 1;
-    #(tck*10000) $finish;
+    // Send a command to the UART (exercise Rx)
+    @(posedge CLK);
+    #(tck*50000)
+    UART_WRITE_BYTE(8'h09);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h09);
+    @(posedge CLK);
+    #(tck*80000) $finish;
  end
  
  

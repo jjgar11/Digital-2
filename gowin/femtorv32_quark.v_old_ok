@@ -33,15 +33,14 @@
 `define NRV_ARCH     "rv32i"
 `define NRV_ABI      "ilp32"
 `define NRV_OPTIMIZE "-Os"
-`include "uart.v"
-
+`include "emitter_uart.v"
 module FemtoRV32(
    input 	 clk,
 
    output [31:0] mem_addr,  // address bus
    output [31:0] mem_wdata, // data to be written
    output [3:0]  mem_wmask, // write mask for the 4 bytes of each word
-   input  [31:0] mem_rdata, // input lines for both data and instr
+   input [31:0]  mem_rdata, // input lines for both data and instr
    output 	 mem_rstrb, // active to initiate memory read (used by IO)
    input 	 mem_rbusy, // asserted if memory is busy reading value
    input 	 mem_wbusy, // asserted if memory is busy writing value
@@ -98,6 +97,7 @@ module FemtoRV32(
    reg [31:0] rs1;
    reg [31:0] rs2;
    
+   (* no_rw_check *)
    reg [31:0] registerFile [31:0];
 
    always @(posedge clk) begin
@@ -389,8 +389,8 @@ module FemtoRV32(
 `endif
 
 endmodule
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+
+
 module Memory (
    input             clk,
    input      [31:0] mem_addr,  // address to be read
@@ -400,11 +400,11 @@ module Memory (
    input      [3:0]  mem_wmask	// masks for writing the 4 bytes (1=write byte) 
 );
 
-   reg [31:0] MEM [0:4095];    // Modificar .equ IO_HW_CONFIG_RAM, 8192  (2048 palabras de 32 bits = 2048 * 4 bytes) en libfemtorv/include/HardwareConfig_bits.inc 
+   reg [31:0] MEM [0:2047];    // Modificar .equ IO_HW_CONFIG_RAM, 8192  (2048 palabras de 32 bits = 2048 * 4 bytes) en libfemtorv/include/HardwareConfig_bits.inc 
 
    initial begin
-       $readmemh("./asm_firmware/firmware.hex",MEM);
-//       $readmemh("./c_firmware/firmware.hex",MEM);
+//       $readmemh("./asm_firmware/firmware.hex",MEM);
+       $readmemh("./c_firmware/firmware.hex",MEM);
    end
 
    wire [29:0] word_addr = mem_addr[31:2];
@@ -449,11 +449,10 @@ module SOC (
    
    wire [31:0] RAM_rdata;
    wire [29:0] mem_wordaddr = mem_addr[31:2];
-   reg isIO;
-   reg isRAM;
-   reg uart_valid;
+   wire isIO  = mem_addr[22];
+   wire isRAM = !isIO;
    wire mem_wstrb = |mem_wmask;
-
+   
    Memory RAM(
       .clk(clk),
       .mem_addr(mem_addr),
@@ -463,103 +462,47 @@ module SOC (
       .mem_wmask({4{isRAM}}&mem_wmask)
    );
 
-   wire uart_tx_busy;
-   wire uart_data_available;
-   wire uart_error;
-   reg  tx_wr  = 0;
-   reg  rx_ack = 0;   
-   wire [7:0] uart_rx_data;
-   reg  [7:0] uart_tx_data;
-   reg  [31:0] IO_rdata;
-  uart #(
-	.freq_hz(25000000),  // for Colorlight
-	.baud(115200)        // for colorlight
-//	.freq_hz(27000000),  // for Gowin
-//	.baud(57600)         // for Gowin
-  ) UART_LM ( 
-	.reset(!resetn),
-	.clk(clk),
-	// UART lines
-	.uart_rxd(RXD),
-	.uart_txd(TXD),
-	// 
-	.rx_data(uart_rx_data),          // Output Data
-	.rx_avail(uart_data_available),  // Output data
-	.rx_error(uart_error),           // Output
-	.rx_ack(rx_ack),                 // Input Enable receiver
-	.tx_data(uart_tx_data),        // Input Data      
-	.tx_wr(tx_wr),                   // Input: Enable Transmitter
-	.tx_busy(uart_tx_busy)           // Output Uart transmitting
-);
-
- 
-  always @*
-  begin
-      if (mem_addr[31:20] == 12'h004) begin	// direcciones - chip_select
-        isIO  = 1;
-        isRAM = 0;
-      end else begin
-        isIO  = 0;
-        isRAM = 1;
-      end
-  end  
-
-  always @*
-  begin
-      if ( (mem_addr[23:0] >= 24'h400008) && (mem_addr[23:0] <= 24'h400010) ) begin	// direcciones - chip_select
-        uart_valid = 1;
-      end else begin
-        uart_valid = 0;
-      end
-  end  
 
    // Memory-mapped IO in IO page, 1-hot addressing in word address.   
-   localparam IO_LEDS_bit      = 2;  // W five leds
-   localparam IO_UART_DAT_bit  = 3;  // W data to send (8 bits) 
-   localparam IO_UART_CNTL_bit = 4;  // R status. bit 9: busy sending
-   
+   localparam IO_LEDS_bit      = 0;  // W five leds
+   localparam IO_UART_DAT_bit  = 1;  // W data to send (8 bits) 
+   localparam IO_UART_CNTL_bit = 2;  // R status. bit 9: busy sending
    
    always @(posedge clk) begin
-      if(isIO & mem_wstrb & mem_addr[IO_LEDS_bit]) begin
+      if(isIO & mem_wstrb & mem_wordaddr[IO_LEDS_bit]) begin
 	 LEDS <= mem_wdata;
 	 $display("Value sent to LEDS: %b %d %d",mem_wdata,mem_wdata,$signed(mem_wdata));
       end
    end
 
+   wire uart_valid = isIO & mem_wstrb & mem_wordaddr[IO_UART_DAT_bit];
+   wire uart_ready;
+   
+   corescore_emitter_uart #(
+//      .clk_freq_hz(27000000),
+      .clk_freq_hz(25000000),
+      
+      .baud_rate(115200)			    
+   ) UART(
+      .i_clk(clk),
+      .i_rst(!resetn),
+      .i_data(mem_wdata[7:0]),
+      .i_valid(uart_valid),
+      .o_ready(uart_ready),
+      .o_uart_tx(TXD)      			       
+   );
 
-   always @(posedge clk) begin
-     if (uart_valid & mem_wstrb & mem_addr[IO_UART_DAT_bit]) begin
-       uart_tx_data <= mem_wdata[7:0];
-     end
-   end
-
-   always @(posedge clk) begin
-     if (uart_valid & mem_wstrb & mem_addr[IO_UART_CNTL_bit]) begin
-       tx_wr  <= mem_wdata[0];
-       rx_ack <= mem_wdata[1];
-     end
-   end
-
-
-  always @*
-  begin
-      if ( uart_valid & !mem_wstrb) begin
-        case (mem_addr[7:0])	// direcciones - chip_select
-          8'h10: IO_rdata = {22'b0, uart_tx_busy, uart_data_available, uart_error, 7'b0};
-          8'h08: IO_rdata = { 24'b0, uart_rx_data};
-          default: IO_rdata = 32'b0;
-        endcase
-      end else begin
-        IO_rdata =  32'b0;
-      end
-  end 
-
-  assign mem_rdata = isRAM ? RAM_rdata : IO_rdata;
+   wire [31:0] IO_rdata = 
+	       mem_wordaddr[IO_UART_CNTL_bit] ? { 22'b0, !uart_ready, 9'b0}
+	                                      : 32'b0;
+   
+   assign mem_rdata = isRAM ? RAM_rdata :
+	                      IO_rdata ;
    
    
 `ifdef BENCH
    always @(posedge clk) begin
-      if(uart_valid & mem_wstrb & mem_addr[IO_UART_DAT_bit]) begin
+      if(uart_valid) begin
 	 $write("%c", mem_wdata[7:0] );
 	 $fflush(32'h8000_0001);
       end

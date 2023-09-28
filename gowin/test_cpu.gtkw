@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Aug 23 20:51:32 2023
+[*] Sat Sep  9 22:15:20 2023
 [*]
 [dumpfile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/bench.vcd"
-[dumpfile_mtime] "Wed Aug 23 20:45:55 2023"
-[dumpfile_size] 30301
+[dumpfile_mtime] "Sat Sep  9 22:08:49 2023"
+[dumpfile_size] 19469482
 [savefile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/test_cpu.gtkw"
-[timestart] 0
+[timestart] 5686
 [size] 2560 1531
-[pos] -1 -1
-*-6.770798 460 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -67 -67
+*-7.770798 6119 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
@@ -17,6 +17,8 @@
 [signals_width] 346
 [sst_expanded] 1
 [sst_vpaned_height] 937
+@23
+bench.uut.CPU.PC[23:0]
 @28
 bench.uut.mem_rstrb
 @c00022
@@ -76,10 +78,11 @@ bench.uut.CPU.rdId[4:0]
 (4)bench.uut.CPU.rdId[4:0]
 @1401200
 -group_end
-@23
+@22
 [color] 3
 bench.uut.CPU.writeBackData[31:0]
 @28
+bench.uut.CPU.writeBack
 bench.uut.CPU.clk
 @22
 [color] 1

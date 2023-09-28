@@ -10,7 +10,8 @@
 start:
         li   gp,IO_BASE
 	li   sp,0x400
-blinker:	
+blinker:
+	
 	li   t0, 62
 	sw   t0, IO_LEDS(gp)
 	call wait
@@ -44,8 +45,13 @@ blinker:
 	li   t0, 62
 	sw   t0, IO_LEDS(gp)
 	call wait
+
 	la   a0, hello
 	call putstring
+        call getchar    # data received on a0
+        call putchar    # data to send on a0
+        li   a0,0x0A
+        call putchar    # data to send on a0
 	j    blinker
 putstring:
 	addi sp,sp,-4 # save ra on the stack
@@ -63,5 +69,5 @@ putstring:
 
 .section .data
 hello:
-	.asciz "Hello, ASM world !\n\r"
+	.asciz "Hello, ASM world\n\r"
 	
