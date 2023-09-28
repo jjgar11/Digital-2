@@ -53,6 +53,7 @@ dkms.conf
 
 *.tar
 *.tar.bz2
+*.tgz
 .vscode
 *.lst
 *.vcd
