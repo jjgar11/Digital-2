@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed Aug 23 21:57:24 2023
+[*]
+[dumpfile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/bench.vcd"
+[dumpfile_mtime] "Wed Aug 23 21:56:25 2023"
+[dumpfile_size] 30571
+[savefile] "/home/carlos/Embedded/litex_work/femtorv/basic/gowin/test_cpu_load.gtkw"
+[timestart] 830
+[size] 2560 1531
+[pos] -1 -1
+*-6.770798 1655 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[treeopen] bench.uut.
+[treeopen] bench.uut.CPU.
+[sst_width] 331
+[signals_width] 346
+[sst_expanded] 1
+[sst_vpaned_height] 937
+@28
+bench.uut.CPU.clk
+@22
+bench.uut.CPU.PC[23:0]
+bench.uut.CPU.mem_rdata[31:0]
+@23
+bench.uut.CPU.state[3:0]
+@28
+bench.uut.CPU.mem_rstrb
+@22
+[color] 3
+bench.uut.CPU.writeBackData[31:0]
+[color] 1
+bench.uut.CPU.mem_addr[31:0]
+@28
+[color] 1
+bench.uut.CPU.mem_byteAccess
+[color] 1
+bench.uut.CPU.mem_halfwordAccess
+@22
+[color] 1
+bench.uut.CPU.mem_rdata[31:0]
+[color] 1
+bench.uut.CPU.mem_wmask[3:0]
+[color] 1
+bench.uut.CPU.mem_wdata[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
