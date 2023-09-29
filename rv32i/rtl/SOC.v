@@ -67,6 +67,21 @@ module SOC (
      .uart_rx(RXD), 
      .ledout(LEDS[0])
    ); 
+
+
+  peripheral_multiplier #(
+     .clk_freq(25000000)
+   ) per_mult(
+     .clk(clk), 
+     .rst(!resetn), 
+     .d_in(mem_wdata), 
+     .cs(cs[3]), 
+     .addr(mem_addr[4:2]), 
+     .rd(rd), 
+     .wr(wr), 
+     .d_out(mult_dout)
+   ); 
+
   // ============== Chip_Select (Addres decoder) ======================== 
   // se hace con los 8 bits mas significativos de mem_addr
   // Se asigna el rango de la memoria de programa 0x00000000 - 0x003FFFFF

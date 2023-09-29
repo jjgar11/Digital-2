@@ -5,6 +5,8 @@ OBJS = SOC.v
 OBJS+= cores/cpu/femtorv32_quark.v
 OBJS+= cores/uart/perip_uart.v
 OBJS+= cores/uart/uart.v
+OBJS+= cores/multiplier/perip_multiplier.v
+OBJS+= cores/multiplier/multiplier.v
 
 
 BUILD_DIR = build
