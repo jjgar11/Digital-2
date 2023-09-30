@@ -8,8 +8,10 @@
 # a:
 # COMMONFLAGS += -flto
 # *************************************************
-OBJECTS = main.o multiplier.o divisor.o putchar.o getchar.o convert.o #wait.o test.o
-#OBJECTS = for.o 
+OBJECTS = main.o putchar.o getchar.o #wait.o test.o
+OBJECTS+= multiplier_hw.o divisor.o convert.o
+#OBJECTS+= multiplier.o divisor.o convert.o
+#OBJECTS = test_perip.o 
 CROSS   = riscv32-unknown-elf
 CC      = $(CROSS)-gcc
 AS      = $(CROSS)-as

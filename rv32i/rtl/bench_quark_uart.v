@@ -108,7 +108,7 @@ always #(tck/2) CLK <= ~CLK;
     UART_WRITE_BYTE(8'h0D);
 
     @(posedge CLK);
-    #(tck*140000) $finish;
+    #(tck*180000) $finish;
  end
  
  
