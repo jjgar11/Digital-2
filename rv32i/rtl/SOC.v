@@ -34,6 +34,8 @@ module SOC (
       .mem_wdata(mem_wdata),
       .mem_wmask({4{cs[0]}}&mem_wmask)
    );
+
+
    wire [31:0] uart_dout;
    wire [31:0] gpio_dout;
    wire [31:0] mult_dout;
@@ -50,7 +52,7 @@ module SOC (
    reg  [31:0] uart_tx_data;
    reg  [31:0] IO_rdata;
 
-    
+
   peripheral_uart #(
      .clk_freq(25000000),
      .baud(115200)
@@ -80,6 +82,20 @@ module SOC (
      .rd(rd), 
      .wr(wr), 
      .d_out(mult_dout)
+   ); 
+
+
+  peripheral_divisor #(
+     .clk_freq(25000000)
+   ) per_div(
+     .clk(clk), 
+     .rst(!resetn), 
+     .d_in(mem_wdata), 
+     .cs(cs[2]), 
+     .addr(mem_addr[4:2]), 
+     .rd(rd), 
+     .wr(wr), 
+     .d_out(div_dout)
    ); 
 
   // ============== Chip_Select (Addres decoder) ======================== 

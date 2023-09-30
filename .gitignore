@@ -63,3 +63,4 @@ openFPGALoader
 *.rpt
 *.svf
 *.json
+test_perip.S

@@ -23,8 +23,25 @@ reg [63:0]	PP;
 reg	[63:0]	A;
 reg	[31:0]	B;
 reg			busy;
+reg			init2; 
+reg			init_prev = 0;
 
 always @(posedge clk)
+begin
+	if (init == init_prev) begin
+		init2 = 0;
+		init_prev <= init_prev;
+	end else begin
+		init_prev <= init;
+		if (init == 1) begin
+			init2 = 1;
+		end else begin
+			init2 = 0;
+		end
+	end
+end
+
+always @(posedge clk, posedge init2)
 begin
 	if (reset) begin
 		PP		<= 0;
@@ -33,7 +50,7 @@ begin
 		busy	<= 0;
 		ready	<= 0;
 	end else begin
-		if (init & !busy) begin
+		if (init2 & !busy) begin
 			A		<= { 32'b0, A_in};
 			B		<= B_in;
 			PP		<= 0;

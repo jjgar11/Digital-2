@@ -7,6 +7,8 @@ OBJS+= cores/uart/perip_uart.v
 OBJS+= cores/uart/uart.v
 OBJS+= cores/multiplier/perip_multiplier.v
 OBJS+= cores/multiplier/multiplier.v
+OBJS+= cores/divisor/perip_divisor.v
+OBJS+= cores/divisor/divisor.v
 
 
 BUILD_DIR = build
