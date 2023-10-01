@@ -3,12 +3,10 @@ TOP=blink
 
 OBJS = SOC.v
 OBJS+= cores/cpu/femtorv32_quark.v
-OBJS+= cores/uart/perip_uart.v
-OBJS+= cores/uart/uart.v
-OBJS+= cores/multiplier/perip_multiplier.v
-OBJS+= cores/multiplier/multiplier.v
-OBJS+= cores/divisor/perip_divisor.v
-OBJS+= cores/divisor/divisor.v
+OBJS+= cores/uart/*
+OBJS+= cores/multiplier/*
+OBJS+= cores/divisor/*
+OBJS+= cores/bin2bcd/*
 
 
 BUILD_DIR = build

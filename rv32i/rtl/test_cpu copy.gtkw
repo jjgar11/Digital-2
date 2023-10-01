@@ -1,22 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Mon Sep 18 04:01:00 2023
+[*] Sun Oct  1 06:16:13 2023
 [*]
-[dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/bench.vcd"
-[dumpfile_mtime] "Mon Sep 18 03:57:17 2023"
-[dumpfile_size] 23259678
-[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/test_cpu copy.gtkw"
-[timestart] 0
+[dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
+[dumpfile_mtime] "Sun Oct  1 06:15:07 2023"
+[dumpfile_size] 3826203
+[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_cpu copy.gtkw"
+[timestart] 4010
 [size] 1920 1012
 [pos] -1 -1
-*-21.058149 8080000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-9.058149 5276 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
+[treeopen] bench.uut.per_conv.
 [sst_width] 211
-[signals_width] 264
+[signals_width] 455
 [sst_expanded] 1
-[sst_vpaned_height] 595
+[sst_vpaned_height] 445
 @22
 bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
@@ -127,22 +128,21 @@ bench.uut.CPU.writeBackData[31:0]
 @24
 bench.uut.CPU.cycles[31:0]
 @28
-bench.uut.UART.rx_busy
-bench.uut.UART.rx_valid
-@820
-bench.uut.UART.rx_data[7:0]
-bench.uut.UART.tx_data[7:0]
-@22
-bench.uut.UART.tx_reg[9:0]
-bench.uut.UART.bit_count[3:0]
-@28
-bench.uut.UART.rx_ack
-bench.uut.UART.uart_rx
-bench.uut.UART.uart_tx
-bench.uut.UART.tx_ready
+bench.uut.per_conv.cs
 @29
-bench.uut.UART.tx_valid
-@22
-bench.uut.IO_rdata[31:0]
+bench.uut.per_conv.s[4:0]
+@28
+bench.uut.per_conv.conv0.bin[31:0]
+bench.uut.per_conv.conv0.busy
+bench.uut.per_conv.conv0.init
+bench.uut.per_conv.conv0.init2
+bench.uut.per_conv.conv0.init_prev
+@24
+bench.uut.per_conv.conv0.nextState[1:0]
+bench.uut.per_conv.conv0.state[1:0]
+@28
+bench.uut.per_conv.ready
+bench.uut.per_conv.result_dn[31:0]
+bench.uut.per_conv.result_up[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

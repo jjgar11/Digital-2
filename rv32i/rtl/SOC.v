@@ -98,6 +98,21 @@ module SOC (
      .d_out(div_dout)
    ); 
 
+
+  peripheral_bin2bcd #(
+     .clk_freq(25000000)
+  ) per_conv(
+     .clk(clk), 
+     .rst(!resetn), 
+     .d_in(mem_wdata), 
+     .cs(cs[1]), 
+     .addr(mem_addr[4:2]), 
+     .rd(rd), 
+     .wr(wr), 
+     .d_out(bin2bcd_dout)
+   );
+
+
   // ============== Chip_Select (Addres decoder) ======================== 
   // se hace con los 8 bits mas significativos de mem_addr
   // Se asigna el rango de la memoria de programa 0x00000000 - 0x003FFFFF

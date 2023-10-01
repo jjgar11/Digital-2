@@ -9,7 +9,7 @@
 # COMMONFLAGS += -flto
 # *************************************************
 OBJECTS = main.o putchar.o getchar.o #wait.o test.o
-OBJECTS+= multiplier_hw.o divisor_hw.o convert.o
+OBJECTS+= multiplier_hw.o divisor_hw.o convert_hw.o
 #OBJECTS+= multiplier.o divisor.o convert.o
 #OBJECTS = test_perip.o 
 CROSS   = riscv32-unknown-elf
