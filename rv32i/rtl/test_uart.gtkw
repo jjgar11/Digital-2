@@ -1,23 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Sep 29 08:03:18 2023
+[*] Sun Oct  1 17:00:49 2023
 [*]
 [dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
-[dumpfile_mtime] "Fri Sep 29 06:23:41 2023"
-[dumpfile_size] 276377844
+[dumpfile_mtime] "Sun Oct  1 16:59:11 2023"
+[dumpfile_size] 279805916
 [savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_uart.gtkw"
-[timestart] 5223000
+[timestart] 186000
 [size] 1920 1012
 [pos] -1 -1
-*-20.618584 7959000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.618584 7204750 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
 [treeopen] bench.uut.per_uart.
-[sst_width] 226
+[sst_width] 37
 [signals_width] 346
-[sst_expanded] 1
-[sst_vpaned_height] 261
+[sst_expanded] 0
+[sst_vpaned_height] 521
 @22
 bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
@@ -140,10 +140,7 @@ bench.uut.per_uart.uart0.rx_count16[3:0]
 bench.uut.per_uart.uart0.rx_ack
 bench.uut.per_uart.uart0.uart_txd
 bench.uut.per_uart.uart0.uart_rxd
-bench.uut.per_uart.uart0.uart_rxd1
-bench.uut.per_uart.uart0.uart_rxd2
 bench.uut.per_uart.uart0.tx_busy
-@29
 bench.uut.per_uart.uart0.tx_wr
 @22
 bench.uut.per_uart.d_out[31:0]

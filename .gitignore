@@ -64,3 +64,4 @@ openFPGALoader
 *.svf
 *.json
 test_perip.S
+guardado ascii.xlsx

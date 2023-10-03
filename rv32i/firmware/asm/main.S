@@ -123,12 +123,17 @@ putstring:
 putresult:
 	addi	sp, sp, -4 # save ra on the stack
 	sw		ra, 0(sp)   # (need to do that for functions that call functions)
-	addi	s0, sp, -8
+	addi	s0, sp, -16
+	addi	s1, s0, 4
 .L1_putresult:
-	lbu		a0, 0(s0)
-	beq		a0, zero, .L2_putresult
+	lbu		a0, -1(s1)
+	beq		a0, zero, .ignore
 	call	putchar
-	addi	s0, s0, 1
+.ignore:
+	addi	s1, s1, -1
+	bne		s0, s1, .L1_putresult
+	addi	s0, s0, 4
+	addi	s1, s1, 8
 	bne		s0, sp, .L1_putresult
 .L2_putresult:
 	li		a0, 10

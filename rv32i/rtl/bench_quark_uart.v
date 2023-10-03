@@ -70,37 +70,37 @@ always #(tck/2) CLK <= ~CLK;
     #80  RESET = 0;
     #160 RESET = 1;
     // Send a command to the UART (exercise Rx)
-    #(tck*80000)
+    #(tck*70000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h35);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h37);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h38);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h0D);
 
-    #(tck*85000)
+    #(tck*75000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h31);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h34);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h0D);
 
-    #(tck*200000)
+    #(tck*180000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h41);
-    #(tck*4000)
+    #(tck*3000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h0D);
 
-    #(tck*280000)
+    #(tck*240000)
     @(posedge CLK);
     UART_WRITE_BYTE(8'h33);
     #(tck*4000)
