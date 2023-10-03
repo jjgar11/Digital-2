@@ -39,6 +39,7 @@ convert:
 .save:
 	add		t0, t3, 0
 .bcdascii:
+	li		t1, 0x30
 	beq		t0, zero, .restore
 	li		t1, 0	# store res in ascii
 	li		t2, 0xF0000000
