@@ -1,26 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Tue Oct  3 21:47:32 2023
+[*] Tue Oct  3 14:33:24 2023
 [*]
 [dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
-[dumpfile_mtime] "Tue Oct  3 21:46:16 2023"
-[dumpfile_size] 233493158
-[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_uart.gtkw"
-[timestart] 22840000
+[dumpfile_mtime] "Tue Oct  3 14:31:42 2023"
+[dumpfile_size] 223357517
+[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_mult.gtkw"
+[timestart] 4010
 [size] 1920 1012
 [pos] -1 -1
-*-21.618584 32453650 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-9.058149 5276 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
 [treeopen] bench.uut.per_conv.
-[treeopen] bench.uut.per_div.
-[treeopen] bench.uut.per_mult.
-[treeopen] bench.uut.per_uart.
 [sst_width] 211
-[signals_width] 465
+[signals_width] 455
 [sst_expanded] 1
-[sst_vpaned_height] 605
+[sst_vpaned_height] 604
 @22
 bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
@@ -128,45 +125,24 @@ bench.uut.CPU.writeBack
 @22
 [color] 3
 bench.uut.CPU.writeBackData[31:0]
+@24
 bench.uut.CPU.cycles[31:0]
 @28
-bench.uut.per_uart.uart0.rx_busy
-bench.uut.per_uart.uart0.rx_avail
-@22
-bench.uut.per_uart.uart0.rx_data[7:0]
-@820
-bench.uut.per_uart.uart0.tx_data[7:0]
+bench.uut.per_conv.cs
+bench.uut.per_conv.s[4:0]
+@29
+bench.uut.per_conv.conv0.bin[31:0]
 @28
-bench.uut.per_uart.uart0.rx_ack
-bench.uut.per_uart.uart0.uart_txd
-bench.uut.per_uart.uart0.uart_rxd
-bench.uut.per_uart.uart0.tx_busy
-bench.uut.per_uart.uart0.tx_wr
-@22
-bench.uut.per_uart.d_out[31:0]
-@28
-bench.uut.per_div.ready
-bench.uut.per_div.div0.init
-bench.uut.per_div.div0.init2
-bench.uut.per_div.div0.clk
-@22
-bench.uut.per_div.div0.result[31:0]
-bench.uut.per_div.div0.count[5:0]
-@28
-bench.uut.per_div.div0.DV[31:0]
-bench.uut.per_div.div0.DR[31:0]
-@24
-bench.uut.per_div.div0.state[1:0]
-bench.uut.per_div.div0.nextState[1:0]
-@28
-bench.uut.per_conv.ready
-@22
-bench.uut.per_conv.result_dn[31:0]
-bench.uut.per_conv.result_up[31:0]
-@28
+bench.uut.per_conv.conv0.busy
 bench.uut.per_conv.conv0.init
 bench.uut.per_conv.conv0.init2
-bench.uut.per_conv.conv0.state[1:0]
+bench.uut.per_conv.conv0.init_prev
+@24
 bench.uut.per_conv.conv0.nextState[1:0]
+bench.uut.per_conv.conv0.state[1:0]
+@28
+bench.uut.per_conv.ready
+bench.uut.per_conv.result_dn[31:0]
+bench.uut.per_conv.result_up[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -41,7 +41,7 @@ begin
 	end
 end
 
-always @(posedge clk, posedge init2)
+always @(negedge clk)
 begin
 	if (reset) begin
 		PP		<= 0;
