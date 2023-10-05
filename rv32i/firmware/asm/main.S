@@ -1,11 +1,6 @@
-.equ IO_BASE, 0x400000  
-.equ IO_LEDS, 4
-.equ IO_UART_DAT, 8
-.equ IO_UART_CNTL, 16
 .section .text
 .globl main
 main:
-	li		gp,IO_BASE
 	li		sp,0x1000
 #	li		a1, 304835	# A
 #	li		a2, 323	# B
@@ -77,17 +72,6 @@ main:
 	li		a0, 10
 	call	putchar
 	j		main
-
-#	la		a3, hello
-#	call	putstring
-# blinker:
-#	li		t0, 1
-#	sw		t0, IO_LEDS(gp)
-#	call	wait
-#	li		t0, 0
-#	sw		t0, IO_LEDS(gp)
-#	call	wait
-#	j		blinker
 
 getstring:
 	addi	sp, sp, -4 # save ra on the stack

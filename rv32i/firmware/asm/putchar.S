@@ -1,3 +1,4 @@
+.equ IO_BASE, 0x400000  
 .equ IO_LEDS, 4
 .equ IO_UART_DAT, 8
 .equ IO_UART_CNTL, 16
@@ -6,6 +7,7 @@
 .globl putchar
 
 putchar:
+	li		gp, IO_BASE
 	sw		a0, IO_UART_DAT(gp)
 	li		t1, 0x01
 	sw		t1, IO_UART_CNTL(gp)

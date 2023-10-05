@@ -1,3 +1,4 @@
+.equ IO_BASE, 0x400000  
 .equ IO_LEDS, 4
 .equ IO_UART_DAT, 8
 .equ IO_UART_CNTL, 16
@@ -7,6 +8,7 @@
 
 getchar:
 .verify:
+	li		gp, IO_BASE
 	lw		t1, IO_UART_CNTL(gp)
 	andi	t1, t1, 1<<8 # bit 8 = data ready
 	beq		t1, zero, .verify

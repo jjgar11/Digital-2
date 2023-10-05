@@ -1,4 +1,9 @@
-.equ IO_CONV, 0x440000
+.equ CONV_BASE,  0x440000
+.equ CONV_BIN,   0
+.equ CONV_INIT,  4
+.equ CONV_DONE,  8
+.equ CONV_RESDN, 12
+.equ CONV_RESUP, 16
 
 .section .text
 .globl convert
@@ -12,19 +17,19 @@ convert:
 	sw		zero, 8(s0)
 	sw		zero, 12(s0)
 
-	li		s9, IO_CONV
-	sw		a3, 0(s9)
+	li		gp, CONV_BASE
+	sw		a3, CONV_BIN(gp)
 	li		t1, 1
-	sw		t1, 4(s9)
-	sw		zero, 4(s9)
+	sw		t1, CONV_INIT(gp)
+	sw		zero, CONV_INIT(gp)
 .loop_convert:
-	lw		t1, 8(s9)
+	lw		t1, CONV_DONE(gp)
 	beq		t1, zero, .loop_convert
 	
 	li		a1, 0
-	lw		t0, 16(s9)			# almacena los bcds
+	lw		t0, CONV_RESUP(gp)			# almacena los bcds
 	call	bcdascii
-	lw		t0, 12(s9)
+	lw		t0, CONV_RESDN(gp)
 	bne		t0, zero, .bcdascii_2
 	li		t1, 0x30
 	sw		t1, 4(s0)
