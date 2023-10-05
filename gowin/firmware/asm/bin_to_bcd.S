@@ -76,10 +76,10 @@ bin_to_bcd:
   li   a0,0x0D
   call putchar   
  
-  lw   a2,0(sp) 
-  lw   a3,4(sp)
-  lw   a4,8(sp) 
-  lw   a5,12(sp)
+  lw   t0,0(sp) 
+  lw   t1,4(sp)
+  lw   t2,8(sp) 
+  lw   t3,12(sp)
   lw   t5,16(sp) 
   lw   t6,20(sp)   
   lw   ra,24(sp)

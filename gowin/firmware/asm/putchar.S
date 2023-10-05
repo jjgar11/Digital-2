@@ -12,10 +12,10 @@
 .globl putchar
 
 putchar:
-   addi sp,sp,-12      # save a3, a4, a5 on the stack
+   addi sp,sp,-8      # save a3, a4, a5 on the stack
    sw   t0,0(sp) 
    sw   t1,4(sp) 
-   sw   ra,8(sp)
+
    
    sw   a0, IO_UART_DAT(gp)
    li   t0, 0x01
@@ -30,7 +30,6 @@ putchar:
    
    lw   t0,0(sp) 
    lw   t1,4(sp)
-   lw   ra,8(sp) 
-   addi sp,sp,12      # save a3, a4, a5 on the stack
+   addi sp,sp,8      # save a3, a4, a5 on the stack
   ret
 

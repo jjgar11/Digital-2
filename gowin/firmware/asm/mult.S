@@ -4,8 +4,8 @@
 mult:
   addi sp,sp,-12      # save a3, a4, a5 on the stack
   sw   a3,0(sp) 
-  sw   a4,1(sp) 
-  sw   a5,2(sp) 
+  sw   a4,4(sp) 
+  sw   a5,8(sp) 
 
   mv    a4, a0
   mv    a5, a1       # a4 * a5
@@ -20,8 +20,8 @@ mult:
   bnez  a5, .L2      # loop until a5 = 0 
 
   lw   a3,0(sp)  # 
-  lw   a4,1(sp)  # 
-  lw   a5,2(sp)  # 
+  lw   a4,4(sp)  # 
+  lw   a5,8(sp)  # 
   addi sp,sp,12  # restore sp
   
   ret

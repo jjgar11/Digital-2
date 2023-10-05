@@ -30,7 +30,7 @@ always @(*) begin
 case (addr)
 5'h08:begin s = (cs) ? 2'b01 : 2'b00 ;end //{24'b0, rx_data}
 5'h10:begin s = (cs) ? 2'b10 : 2'b00 ;end //{22'b0, tx_busy, rx_avail, rx_error, 7'b0}
-default:begin s=3'b000 ; end
+default:begin s=2'b00 ; end
 endcase
 end
 

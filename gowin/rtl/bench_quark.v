@@ -62,10 +62,14 @@ always #(tck/2) CLK <= ~CLK;
 	
    end
    
-   initial
- begin
+   
+       integer idx; 
+   initial begin
+
     $dumpfile("bench.vcd");
     $dumpvars(-1,bench);
+    for(idx = 0; idx < 32; idx = idx +1)  $dumpvars(0, bench.uut.CPU.registerFile[idx]);
+    //$dumpvars(0, bench.uut.CPU.registerFile[10],bench);
     #0   RXD   = 1;
     #0   RESET = 0;
     #80  RESET = 0;
@@ -76,8 +80,27 @@ always #(tck/2) CLK <= ~CLK;
     UART_WRITE_BYTE(8'h34);
     #(tck*2500)
     UART_WRITE_BYTE(8'h35);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h2A);    // Operator *
+    #(tck*2500)  
+    UART_WRITE_BYTE(8'h34);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h32);
+    #(tck*100000)
+    UART_WRITE_BYTE(8'h39);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h39);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h2F);   // operator /
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h30);
+    #(tck*2500)
+    UART_WRITE_BYTE(8'h33);
+
+
+    
     @(posedge CLK);
-    #(tck*80000) $finish;
+    #(tck*50000) $finish;
  end
  
  

@@ -40,17 +40,6 @@ module SOC (
    wire [31:0] div_dout;
    wire [31:0] bin2bcd_dout;
   
-
-   wire uart_tx_busy;
-   wire uart_data_available;
-   wire uart_error;
-   reg  tx_wr  = 0;
-   reg  rx_ack = 0;   
-   wire [31:0] uart_rx_data;
-   reg  [31:0] uart_tx_data;
-   reg  [31:0] IO_rdata;
-
-    
   peripheral_uart #(
      .clk_freq(25000000),
      .baud(115200)

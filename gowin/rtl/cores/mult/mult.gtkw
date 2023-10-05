@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Oct  3 01:20:21 2023
+[*]
+[dumpfile] "(null)"
+[savefile] "/home/carlos/Embedded/litex_work/femtorv/basic/rtl/cores/mult/mult.gtkw"
+[timestart] 0
+[size] 2560 1531
+[pos] -1 -1
+*-16.000000 342400 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mult_TB.
+[sst_width] 331
+[signals_width] 387
+[sst_expanded] 1
+[sst_vpaned_height] 457
+@28
+mult_TB.uut.clk
+mult_TB.uut.init
+mult_TB.uut.reset
+@22
+mult_TB.uut.count[3:0]
+@c00022
+mult_TB.uut.op_A[15:0]
+@28
+(0)mult_TB.uut.op_A[15:0]
+(1)mult_TB.uut.op_A[15:0]
+(2)mult_TB.uut.op_A[15:0]
+(3)mult_TB.uut.op_A[15:0]
+(4)mult_TB.uut.op_A[15:0]
+(5)mult_TB.uut.op_A[15:0]
+(6)mult_TB.uut.op_A[15:0]
+(7)mult_TB.uut.op_A[15:0]
+(8)mult_TB.uut.op_A[15:0]
+(9)mult_TB.uut.op_A[15:0]
+(10)mult_TB.uut.op_A[15:0]
+(11)mult_TB.uut.op_A[15:0]
+(12)mult_TB.uut.op_A[15:0]
+(13)mult_TB.uut.op_A[15:0]
+(14)mult_TB.uut.op_A[15:0]
+(15)mult_TB.uut.op_A[15:0]
+@1401200
+-group_end
+@22
+mult_TB.uut.op_B[15:0]
+@23
+mult_TB.uut.result[32:0]
+@28
+mult_TB.uut.state[2:0]
+mult_TB.uut.done
+@22
+mult_TB.uut.A[31:0]
+@28
+mult_TB.uut.B[15:0]
+[pattern_trace] 1
+[pattern_trace] 0
