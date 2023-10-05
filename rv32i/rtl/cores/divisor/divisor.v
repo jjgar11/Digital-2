@@ -14,7 +14,8 @@ module divisor #(
 	input				init,	// control de inicio
 	output reg			ready,	// verificacion resultado
 	// resultado
-	output reg [31:0]	result
+	output reg [31:0]	result,
+	output reg [31:0]	mod
 	//	
 );
 
@@ -81,6 +82,7 @@ begin
 			ready	<= 1;
 			busy	<= 0;
 			result	<= PP;
+			mod		<= A;
 			nextState <= 0;
 		end
 		default: nextState <= 0;

@@ -13,5 +13,9 @@ div:
 .loop_div:
 	lw		t1, 12(s9)
 	beq		t1, zero, .loop_div
+	beq		a3, zero, .ret_mod
 	lw		a3, 16(s9)
+	ret
+.ret_mod:
+	lw		a3, 20(s9)
 	ret

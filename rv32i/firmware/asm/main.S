@@ -35,6 +35,8 @@ main:
 	beq		t0, t1, .select_mul
 	addi	t1, t1, 1
 	beq		t0, t1, .select_div
+	addi	t1, t1, 1
+	beq		t0, t1, .select_mod
 	addi	s0, s0, 4
 	la		a3, error
 	call	putstring
@@ -60,6 +62,13 @@ main:
 .select_div:
 	la		a3, div_result
 	call	putstring
+	li		a3, 1
+	call	div
+	j		.print_result
+.select_mod:
+	la		a3, mod_result
+	call	putstring
+	li		a3, 0
 	call	div
 	j		.print_result
 .print_result:
@@ -156,6 +165,8 @@ multi_result:
 	.asciz "El resultado de la multiplicacion es: "
 div_result:
 	.asciz "El resultado de la division es: "
+mod_result:
+	.asciz "El resultado del modulo es: "
 input1:
 	.asciz "Ingrese el primer operando: "
 input2:
@@ -163,4 +174,4 @@ input2:
 error:
 	.asciz "Ingrese una opcion valida.\n\r"
 op:
-	.asciz "\nSeleccione la operacion:\n\r1.Suma\n\r2.Resta\n\r3.Multiplicacion\n\r4.Division\n\n\r"
+	.asciz "\nSeleccione la operacion:\n\r1.Suma\n\r2.Resta\n\r3.Multiplicacion\n\r4.Division\n\r5.Modulo\n\n\r"
