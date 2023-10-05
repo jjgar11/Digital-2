@@ -14,29 +14,20 @@ module bin2bcd #(
 	output reg			ready,	// verificacion resultado
 	// resultado
 	output reg [31:0]	result_dn,
-	output reg [31:0]	result_md,
 	output reg [31:0]	result_up
 	//	
 );
 
 reg	[1:0]	state, nextState;
-reg			rst;
 reg	[31:0]	bin;
 reg	[4:0]	count;
 reg			busy;
-reg			init2; 
-reg			init_prev = 0;
 
 // Asignación síncrona: Actualización del estado
-always @(posedge clk)
+always @(negedge clk)
 begin
-	if (reset | rst) begin
-		bin		<= 0;
-		count	<= 0;
-		busy	<= 0;
+	if (reset) begin
 		state	<= 0;
-		nextState <= 0;
-		rst		<= 0;
 	end else begin
 		state <= nextState;
 	end
@@ -44,25 +35,12 @@ end
 
 always @(posedge clk)
 begin
-	if (init == init_prev) begin
-		init2 = 0;
-		init_prev <= init_prev;
-	end else begin
-		init_prev <= init;
-		if (init == 1) begin
-			init2 = 1;
-		end else begin
-			init2 = 0;
-		end
-	end
-end
-
-always @(state, posedge init2)
-begin
 	case (state)
 		0: begin		// start
-			if (!init2) begin
-				rst		<= 1;
+			if (!init) begin
+				bin		<= 0;
+				count	<= 0;
+				busy	<= 0;
 				nextState <= 0;
 			end else begin
 				bin			<= bin_in;

@@ -18,6 +18,8 @@ reg [31:0]	d_in_DR = 0;	// data in div B
 reg 		init = 0;	// div init
 wire 		ready;	// div ready
 wire [31:0]	result;	// data out result
+reg			init2; 
+reg			init_prev = 0;
 
 //----address_decoder (one selection bit for register) ------------------
 always @(*) begin
@@ -29,6 +31,22 @@ always @(*) begin
 		3'b100:begin s = (cs & rd) ? 5'b10000 : 0 ;end // output result
 		default:begin s=0 ; end
 	endcase
+end
+
+//----init pulse generator ------------------
+always @(negedge clk)
+begin
+	if (init == init_prev) begin
+		init2 = 0;
+		init_prev <= init_prev;
+	end else begin
+		init_prev <= init;
+		if (init == 1) begin
+			init2 = 1;
+		end else begin
+			init2 = 0;
+		end
+	end
 end
 
 //Input Registers
@@ -54,7 +72,7 @@ divisor #(
 	.clk(      clk          ),
 	.DV_in(    d_in_DV      ),
 	.DR_in(    d_in_DR      ),
-	.init(     init         ),
+	.init(     init2        ),
 	.ready(    ready        ),
 	.result(   result       )
 );

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Tue Oct  3 21:47:32 2023
+[*] Thu Oct  5 01:15:01 2023
 [*]
 [dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
-[dumpfile_mtime] "Tue Oct  3 21:46:16 2023"
-[dumpfile_size] 233493158
+[dumpfile_mtime] "Thu Oct  5 01:04:44 2023"
+[dumpfile_size] 222675624
 [savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_uart.gtkw"
-[timestart] 22840000
+[timestart] 52426390
 [size] 1920 1012
 [pos] -1 -1
-*-21.618584 32453650 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-12.618584 52448520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
@@ -18,9 +18,9 @@
 [treeopen] bench.uut.per_mult.
 [treeopen] bench.uut.per_uart.
 [sst_width] 211
-[signals_width] 465
+[signals_width] 258
 [sst_expanded] 1
-[sst_vpaned_height] 605
+[sst_vpaned_height] 394
 @22
 bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
@@ -145,28 +145,59 @@ bench.uut.per_uart.uart0.tx_wr
 @22
 bench.uut.per_uart.d_out[31:0]
 @28
-bench.uut.per_div.ready
-bench.uut.per_div.div0.init
-bench.uut.per_div.div0.init2
-bench.uut.per_div.div0.clk
+[color] 7
+bench.uut.per_div.cs
 @22
-bench.uut.per_div.div0.result[31:0]
+[color] 7
+bench.uut.per_div.s[4:0]
+@28
+[color] 7
+bench.uut.per_div.div0.init
+@22
+[color] 7
+bench.uut.per_div.div0.DV[31:0]
+[color] 7
+bench.uut.per_div.div0.DR[31:0]
+[color] 7
+bench.uut.per_div.div0.A[31:0]
+[color] 7
 bench.uut.per_div.div0.count[5:0]
 @28
-bench.uut.per_div.div0.DV[31:0]
-bench.uut.per_div.div0.DR[31:0]
-@24
+[color] 7
 bench.uut.per_div.div0.state[1:0]
+[color] 7
 bench.uut.per_div.div0.nextState[1:0]
+[color] 7
+bench.uut.per_div.div0.ready
+@22
+[color] 7
+bench.uut.per_div.div0.result[31:0]
 @28
+[color] 3
+bench.uut.per_conv.cs
+@24
+[color] 3
+bench.uut.per_conv.s[4:0]
+@29
+[color] 3
+bench.uut.per_conv.conv0.init
+@22
+[color] 3
+bench.uut.per_conv.conv0.bin[31:0]
+@24
+[color] 3
+bench.uut.per_conv.conv0.count[4:0]
+[color] 3
+bench.uut.per_conv.conv0.state[1:0]
+[color] 3
+bench.uut.per_conv.conv0.nextState[1:0]
+@28
+[color] 3
 bench.uut.per_conv.ready
 @22
+[color] 3
 bench.uut.per_conv.result_dn[31:0]
+[color] 3
 bench.uut.per_conv.result_up[31:0]
-@28
-bench.uut.per_conv.conv0.init
-bench.uut.per_conv.conv0.init2
-bench.uut.per_conv.conv0.state[1:0]
-bench.uut.per_conv.conv0.nextState[1:0]
 [pattern_trace] 1
 [pattern_trace] 0
