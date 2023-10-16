@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue Oct 17 15:30:01 2023
+[*]
+[dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
+[dumpfile_mtime] "Tue Oct 17 15:28:54 2023"
+[dumpfile_size] 35527832
+[savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_screen.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-12.000000 26700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[treeopen] bench.uut.
+[treeopen] bench.uut.per_conv.
+[treeopen] bench.uut.per_screen.
+[sst_width] 211
+[signals_width] 219
+[sst_expanded] 1
+[sst_vpaned_height] 329
+@28
+bench.CLK
+bench.RESET
+bench.CLK_SCREEN
+bench.BLANK
+bench.LATCH
+@24
+bench.A[4:0]
+@28
+bench.RGB0[2:0]
+bench.RGB1[2:0]
+@25
+bench.uut.per_screen.screen0.col[5:0]
+@24
+bench.uut.per_screen.screen0.state[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

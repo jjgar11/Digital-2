@@ -3,10 +3,11 @@ TOP=blink
 
 OBJS = SOC.v
 OBJS+= cores/cpu/femtorv32_quark.v
-OBJS+= cores/uart/*
-OBJS+= cores/multiplier/*
-OBJS+= cores/divisor/*
-OBJS+= cores/bin2bcd/*
+OBJS+= cores/uart/*uart.v
+OBJS+= cores/multiplier/*multiplier.v
+OBJS+= cores/divisor/*divisor.v
+OBJS+= cores/bin2bcd/*bin2bcd.v
+OBJS+= cores/screen/*screen.v
 
 
 BUILD_DIR = build
@@ -22,7 +23,7 @@ clean:
 	rm -rf impl obj_dir *svg a.out *.vcd *.json *.bit build *.config *.rpt *.svf *.elf *.bin *.map *.d *.hex
 sim: 
 	rm -f a.out *.vcd
-	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark_uart.v $(OBJS)
+	iverilog -DBENCH -DSIM -DPASSTHROUGH_PLL -DBOARD_FREQ=27 -DCPU_FREQ=27 bench_quark.v $(OBJS)
 	vvp a.out
 	gtkwave bench.vcd &
 
