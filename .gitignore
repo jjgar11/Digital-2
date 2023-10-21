@@ -65,3 +65,4 @@ openFPGALoader
 *.json
 test_perip.S
 guardado ascii.xlsx
+node_modules

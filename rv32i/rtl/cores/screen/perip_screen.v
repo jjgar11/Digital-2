@@ -3,16 +3,16 @@ module peripheral_screen#(
 )(
 	input clk,
 	input rst,
-	output			clk_screen,
-	output			R0,
-	output			G0,
-	output			B0,
-	output			R1,
-	output			G1,
-	output			B1,
-	output			blank,
-	output			latch,
-	output [4:0]	row
+	output wire			clk_screen,
+	output wire			R0,
+	output wire			G0,
+	output wire			B0,
+	output wire			R1,
+	output wire			G1,
+	output wire			B1,
+	output wire			blank,
+	output wire			latch,
+	output wire [4:0]	row
 );
 
 screen32x32 #(
