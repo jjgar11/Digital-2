@@ -8,7 +8,7 @@ module screen32x32 #(
 	input				reset,
 	input				clk,
 	//	
-	output reg			clk_screen,
+	output wire			clk_screen,
 	output wire			R0,
 	output wire			G0,
 	output wire			B0,
@@ -24,63 +24,93 @@ parameter SHIFT  = 2'b01;
 parameter PRINT  = 2'b10;
 parameter WAIT   = 2'b11;
 
+parameter NUM_COLS = 64;
+
 reg [1:0]	state;
-reg [5:0]	col;
-reg [31:0]	Rdata = 32'b01010101010101010101010101010101;
-reg [31:0]	Gdata = 32'b10101010101010101010101010101010;
-reg [31:0]	Bdata = 32'b11111111111111111111111111111110;
+reg [($clog2(NUM_COLS)-1):0]	col;
+reg			enable_clk;
+assign		clk_screen = clk_sm & enable_clk;
 
-assign R0 = Rdata[31];
-assign G0 = Gdata[31];
-assign B0 = Bdata[31];
-assign R1 = Rdata[31];
-assign G1 = Gdata[31];
-assign B1 = Bdata[31];
+// reg [NUM_COLS-1:0]	Rdata = 64'hFFFF0000FFFFFFFF;
+// reg [NUM_COLS-1:0]	Gdata = 64'hFFFFFFFF0000FFFF;
+// reg [NUM_COLS-1:0]	Bdata = 64'h0000FFFFFFFFFFFF;
 
-localparam DELAY = 100000;
-localparam WIDTH2 = $clog2(DELAY)-1;
-reg [WIDTH2:0] delay_cycles = 0;
+// assign R0 = Rdata[col];
+// assign G0 = Gdata[col];
+// assign B0 = Bdata[col];
+// assign R1 = ~Rdata[col];
+// assign G1 = ~Gdata[col];
+// assign B1 = ~Bdata[col];
+
+reg [2:0] colors;
+reg  count_secs;
+
+always @(posedge clk_secs or posedge reset)
+begin
+	if (reset) begin
+		colors		<= 0;
+		count_secs	<= 0;
+	end else begin
+		count_secs++;
+		if(&(count_secs)) begin
+			colors++;
+		end
+	end
+end
+
+assign R0 = colors[0];
+assign G0 = colors[1];
+assign B0 = colors[2];
+assign R1 = colors[0];
+assign G1 = colors[1];
+assign B1 = colors[2];
+
+localparam DELAY = 64;
+reg [($clog2(DELAY)-1):0] delay_cycles;
 
 
-always @(negedge clk_screen or posedge reset)
+always @(negedge clk_sm or posedge reset)
 begin
 if (reset) begin
-	blank	<= 0;
+	blank	<= 1;
 	latch	<= 0;
-	state	<= 0;
+	state	<= START;
 	row	<= 0;
 	col	<= 0;
+	enable_clk <= 0;
+	delay_cycles <= 0;
 end else begin
 	case(state)
 		START: begin
 			blank	<= 1;
-			state	<= 1;
+			state	<= SHIFT;
+			enable_clk <= 1;
 		end
 		SHIFT: begin
-			if ((&col)) begin
+			if (&col) begin
+				enable_clk <= 0;
 				latch <= 1;
-				state <= 2;
+				state <= PRINT;
 			end
-			Rdata = {Rdata[30:0], Rdata[31]};
-			Gdata = {Gdata[30:0], Gdata[31]};
-			Bdata = {Bdata[30:0], Bdata[31]};
 			col++;
 		end
 		PRINT: begin
 			latch <= 0;
 			if (!latch) begin
 				blank <= 0;
-				state <= 3;
+				state <= WAIT;
 				delay_cycles <= 0;
 			end
 		end
 		WAIT: begin
-			if (delay_cycles == DELAY) begin
+			if (delay_cycles == DELAY - 1) begin
 				row++;
-				state <= 0;
-			end else begin
-				delay_cycles++;
+				blank <= 1;
+				state <= START;
+			end else if (delay_cycles == 1) begin
+				blank <= 1;
 			end
+			delay_cycles++;
 		end
 	endcase
 end
@@ -93,20 +123,51 @@ end
 
 localparam FREQ_SCREEN = 2500000;
 localparam CYCLES = freq_hz/FREQ_SCREEN/2;
-localparam WIDTH = $clog2(CYCLES)-1;
+reg [($clog2(CYCLES)-1):0] count_clk;
 
-reg [WIDTH:0] count_clk = 0;
+reg clk_sm;
 
 always@(posedge clk or posedge reset)
 begin
 	if (reset) begin
-		clk_screen <= 0;
+		clk_sm <= 0;
+		count_clk <= 0;
 	end else begin
-		if(count_clk==CYCLES-1) begin		// cuenta x de reloj    
+		if(count_clk==CYCLES - 1) begin		// cuenta x de reloj    
 				count_clk<=0;				// reinicia cuenta a 0
-				clk_screen <= ~clk_screen; // transiciona clk_screen a alto o bajo
+				clk_sm <= ~clk_sm; // transiciona clk_sm a alto o bajo
 		end	else begin
 			count_clk<=count_clk+1;  //  aumenta contador
+		end
+	end
+end
+
+// ======================================================================
+// ======================================================================
+
+
+
+
+// ======================================================================
+// ================== divisor de reloj 25MHz a 1Hz ===================
+// ======================================================================
+
+localparam FREQ_HZ = 1;
+localparam CYCLES2 = freq_hz/FREQ_HZ/2;
+reg [($clog2(CYCLES2)-1):0] count_clk_seg = 0;
+
+reg clk_secs;
+
+always@(posedge clk or posedge reset)
+begin
+	if (reset) begin
+		clk_secs <= 0;
+	end else begin
+		if(count_clk_seg==CYCLES2 - 1) begin		// cuenta x de reloj    
+				count_clk_seg<=0;				// reinicia cuenta a 0
+				clk_secs <= ~clk_secs; // transiciona clk_secs a alto o bajo
+		end	else begin
+			count_clk_seg<=count_clk_seg+1;  //  aumenta contador
 		end
 	end
 end
