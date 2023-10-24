@@ -84,7 +84,7 @@ configure_i5: ${TARGET}_i5.bit   # TDI:TDO:TCK:TMS
 configure_tang: ${TARGET}.fs
 	sudo openFPGALoader -b tangprimer20k -m impl/pnr/project.fs	
 
-.PHONY: clean
+.PHONY: clean sim sim_iverilog sim_verilator configure configure_i5 configure_tang
 
 
 # export PATH=$PATH:/home/carlos/Embedded/Gowin/IDE/bin

@@ -23,3 +23,5 @@ clean:
 	
 cleanall: clean
 	make -C rtl clean
+
+PHONY: clean cleanall firmware_words c asm sim configure
