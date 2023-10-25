@@ -9,77 +9,99 @@ module screen32x32 #(
 	input				clk,
 	//	
 	output wire			clk_screen,
-	output wire			R0,
-	output wire			G0,
-	output wire			B0,
-	output wire			R1,
-	output wire			G1,
-	output wire			B1,
+	output reg			R0,
+	output reg			G0,
+	output reg			B0,
+	output reg			R1,
+	output reg			G1,
+	output reg			B1,
 	output reg			blank,
 	output reg			latch,
 	output reg [4:0]	row);
 
+// ====== Estados de la maquina de estados ======
 parameter START  = 2'b00;
 parameter SHIFT  = 2'b01;
 parameter PRINT  = 2'b10;
 parameter WAIT   = 2'b11;
-
-parameter NUM_COLS = 64;
-
 reg [1:0]	state;
+// ----------------------------------------------
+
+// ======== Caracteristicas de la matriz ========
+parameter NUM_COLS = 64;
+parameter NUM_ROWS = 64;
+parameter NUM_PIXELS = NUM_COLS*NUM_ROWS;
+parameter HALF_SCREEN = NUM_PIXELS/2;
+parameter BIT_DEPTH = 4;
 reg [($clog2(NUM_COLS)-1):0]	col;
-reg			enable_clk;
-assign		clk_screen = clk_sm & enable_clk;
+reg [($clog2(HALF_SCREEN)-1):0]	pixel;
+// ----------------------------------------------
 
-// reg [NUM_COLS-1:0]	Rdata = 64'hFFFF0000FFFFFFFF;
-// reg [NUM_COLS-1:0]	Gdata = 64'hFFFFFFFF0000FFFF;
-// reg [NUM_COLS-1:0]	Bdata = 64'h0000FFFFFFFFFFFF;
+// ====== Parametros del BCM (Bit Code Modulation) ======
+localparam INIT_DELAY = 16;
+localparam MAX_DELAY = 2**(BIT_DEPTH-1) * INIT_DELAY;
+reg [($clog2(MAX_DELAY+1)-1):0] count_delay;
+reg [($clog2(MAX_DELAY+1)-1):0] delay_cycles;
+reg [($clog2(BIT_DEPTH)-1):0] index_depth;
+// ------------------------------------------------------
 
-// assign R0 = Rdata[col];
-// assign G0 = Gdata[col];
-// assign B0 = Bdata[col];
-// assign R1 = ~Rdata[col];
-// assign G1 = ~Gdata[col];
-// assign B1 = ~Bdata[col];
+// ====== INFORMACION DE LA MATRIX ENTERA ======
+reg [(BIT_DEPTH*3-1):0] colors [(NUM_PIXELS-1):0];
+// ---------------------------------------------
 
-reg [2:0] colors;
-reg  count_secs;
+// ======= Informacion del pixel actual =======
+reg [(BIT_DEPTH-1):0] data_r0;
+reg [(BIT_DEPTH-1):0] data_g0;
+reg [(BIT_DEPTH-1):0] data_b0;
+reg [(BIT_DEPTH-1):0] data_r1;
+reg [(BIT_DEPTH-1):0] data_g1;
+reg [(BIT_DEPTH-1):0] data_b1;
+// --------------------------------------------
 
-always @(posedge clk_secs or posedge reset)
-begin
-	if (reset) begin
-		colors		<= 0;
-		count_secs	<= 0;
-	end else begin
-		count_secs++;
-		if(&(count_secs)) begin
-			colors++;
-		end
+// ====== Clock del registro de corrimiento ======
+reg		enable_clk;
+assign	clk_screen = clk_sm & enable_clk;
+// -----------------------------------------------
+
+// ======= Prueba desvanecido unicromatico =======
+reg [(BIT_DEPTH*3-1):0] test [(NUM_COLS-1):0];
+reg [6:0] color_counter;
+initial begin
+	for (color_counter = 0; color_counter < 64; color_counter = color_counter + 1) begin
+		test[color_counter] <= {color_counter[5:2], 8'b0};
 	end
 end
-
-assign R0 = colors[0];
-assign G0 = colors[1];
-assign B0 = colors[2];
-assign R1 = colors[0];
-assign G1 = colors[1];
-assign B1 = colors[2];
-
-localparam DELAY = 64;
-reg [($clog2(DELAY)-1):0] delay_cycles;
-
+// -----------------------------------------------
 
 always @(negedge clk_sm or posedge reset)
 begin
 if (reset) begin
+	row	<= 0;
+	col	<= 0;
+	pixel	<= 0;
 	blank	<= 1;
 	latch	<= 0;
 	state	<= START;
-	row	<= 0;
-	col	<= 0;
-	enable_clk <= 0;
-	delay_cycles <= 0;
+	enable_clk	<= 0;
+	count_delay	<= 0;
+	delay_cycles<= INIT_DELAY;
+	index_depth	<= 0;
 end else begin
+
+	// data_r0 <= colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	// data_g0 <= colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	// data_b0 <= colors[pixel][(1*BIT_DEPTH-1):0];
+	// data_r1 <= colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	// data_g1 <= colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	// data_b1 <= colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
+
+	data_r0 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	data_g0 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	data_b0 <= test[col][(1*BIT_DEPTH-1):0];
+	data_r1 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	data_g1 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	data_b1 <= test[col][(1*BIT_DEPTH-1):0];
+
 	case(state)
 		START: begin
 			blank	<= 1;
@@ -90,8 +112,16 @@ end else begin
 			if (&col) begin
 				enable_clk <= 0;
 				latch <= 1;
+				pixel <= pixel - NUM_COLS + 1;
 				state <= PRINT;
 			end
+			R0 <= data_r0[index_depth];
+			G0 <= data_g0[index_depth];
+			B0 <= data_b0[index_depth];
+			R1 <= data_r1[index_depth];
+			G1 <= data_g1[index_depth];
+			B1 <= data_b1[index_depth];
+			pixel++;
 			col++;
 		end
 		PRINT: begin
@@ -99,18 +129,23 @@ end else begin
 			if (!latch) begin
 				blank <= 0;
 				state <= WAIT;
-				delay_cycles <= 0;
+				count_delay <= 0;
 			end
 		end
 		WAIT: begin
-			if (delay_cycles == DELAY - 1) begin
-				row++;
+			if (count_delay == delay_cycles - 1) begin
+				index_depth++;
+				delay_cycles = delay_cycles + delay_cycles;
 				blank <= 1;
 				state <= START;
-			end else if (delay_cycles == 1) begin
-				blank <= 1;
 			end
-			delay_cycles++;
+			if (delay_cycles == 0) begin
+				index_depth <= 0;
+				delay_cycles <= INIT_DELAY;
+				row++;
+				pixel <= pixel + NUM_COLS;
+			end
+			count_delay++;
 		end
 	endcase
 end
