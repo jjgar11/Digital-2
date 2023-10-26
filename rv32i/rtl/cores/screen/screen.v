@@ -32,13 +32,13 @@ parameter NUM_COLS = 64;
 parameter NUM_ROWS = 64;
 parameter NUM_PIXELS = NUM_COLS*NUM_ROWS;
 parameter HALF_SCREEN = NUM_PIXELS/2;
-parameter BIT_DEPTH = 4;
+parameter BIT_DEPTH = 6;
 reg [($clog2(NUM_COLS)-1):0]	col;
 reg [($clog2(HALF_SCREEN)-1):0]	pixel;
 // ----------------------------------------------
 
 // ====== Parametros del BCM (Bit Code Modulation) ======
-localparam INIT_DELAY = 16;
+localparam INIT_DELAY = 64;
 localparam MAX_DELAY = 2**(BIT_DEPTH-1) * INIT_DELAY;
 reg [($clog2(MAX_DELAY+1)-1):0] count_delay;
 reg [($clog2(MAX_DELAY+1)-1):0] delay_cycles;
@@ -50,12 +50,12 @@ reg [(BIT_DEPTH*3-1):0] colors [(NUM_PIXELS-1):0];
 // ---------------------------------------------
 
 // ======= Informacion del pixel actual =======
-reg [(BIT_DEPTH-1):0] data_r0;
-reg [(BIT_DEPTH-1):0] data_g0;
-reg [(BIT_DEPTH-1):0] data_b0;
-reg [(BIT_DEPTH-1):0] data_r1;
-reg [(BIT_DEPTH-1):0] data_g1;
-reg [(BIT_DEPTH-1):0] data_b1;
+wire [(BIT_DEPTH-1):0] data_r0;
+wire [(BIT_DEPTH-1):0] data_g0;
+wire [(BIT_DEPTH-1):0] data_b0;
+wire [(BIT_DEPTH-1):0] data_r1;
+wire [(BIT_DEPTH-1):0] data_g1;
+wire [(BIT_DEPTH-1):0] data_b1;
 // --------------------------------------------
 
 // ====== Clock del registro de corrimiento ======
@@ -69,10 +69,25 @@ reg [6:0] color_counter;
 reg [(BIT_DEPTH*1-1):0] zero = 0;
 initial begin
 	for (color_counter = 0; color_counter < 64; color_counter = color_counter + 1) begin
-		test[color_counter] <= {color_counter[5:(6-BIT_DEPTH)], zero, zero};
+		test[color_counter] <= {color_counter[5:(6-BIT_DEPTH)], color_counter[5:(6-BIT_DEPTH)], zero};
 	end
 end
 // -----------------------------------------------
+
+// =============== ASIGNACION DE SALIDAS ===============
+
+// assign data_r0 = colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+// assign data_g0 = colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+// assign data_b0 = colors[pixel][(1*BIT_DEPTH-1):0];
+// assign data_r1 = colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+// assign data_g1 = colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+// assign data_b1 = colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
+assign data_r0 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+assign data_g0 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+assign data_b0 = test[col][(1*BIT_DEPTH-1):0];
+assign data_r1 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+assign data_g1 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+assign data_b1 = test[col][(1*BIT_DEPTH-1):0];
 
 assign R0 = data_r0[index_depth];
 assign G0 = data_g0[index_depth];
@@ -80,21 +95,7 @@ assign B0 = data_b0[index_depth];
 assign R1 = data_r1[index_depth];
 assign G1 = data_g1[index_depth];
 assign B1 = data_b1[index_depth];
-
-always @(*) begin
-	// data_r0 <= colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	// data_g0 <= colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	// data_b0 <= colors[pixel][(1*BIT_DEPTH-1):0];
-	// data_r1 <= colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	// data_g1 <= colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	// data_b1 <= colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
-	data_r0 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	data_g0 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	data_b0 <= test[col][(1*BIT_DEPTH-1):0];
-	data_r1 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	data_g1 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	data_b1 <= test[col][(1*BIT_DEPTH-1):0];
-end
+// -----------------------------------------------------
 
 always @(negedge clk_sm or posedge reset)
 begin
@@ -156,10 +157,10 @@ end
 
 
 // ======================================================================
-// ================== divisor de reloj 25MHz a 2.5MHz ===================
+// ================== divisor de reloj 25MHz a 12.5MHz ===================
 // ======================================================================
 
-localparam FREQ_SCREEN = 2500000;
+localparam FREQ_SCREEN = 12500000;
 localparam CYCLES = freq_hz/FREQ_SCREEN/2;
 reg [($clog2(CYCLES)-1):0] count_clk;
 
