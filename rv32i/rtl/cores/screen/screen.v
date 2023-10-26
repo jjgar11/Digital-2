@@ -9,12 +9,12 @@ module screen32x32 #(
 	input				clk,
 	//	
 	output wire			clk_screen,
-	output reg			R0,
-	output reg			G0,
-	output reg			B0,
-	output reg			R1,
-	output reg			G1,
-	output reg			B1,
+	output wire			R0,
+	output wire			G0,
+	output wire			B0,
+	output wire			R1,
+	output wire			G1,
+	output wire			B1,
 	output reg			blank,
 	output reg			latch,
 	output reg [4:0]	row);
@@ -66,12 +66,35 @@ assign	clk_screen = clk_sm & enable_clk;
 // ======= Prueba desvanecido unicromatico =======
 reg [(BIT_DEPTH*3-1):0] test [(NUM_COLS-1):0];
 reg [6:0] color_counter;
+reg [(BIT_DEPTH*1-1):0] zero = 0;
 initial begin
 	for (color_counter = 0; color_counter < 64; color_counter = color_counter + 1) begin
-		test[color_counter] <= {color_counter[5:2], 8'b0};
+		test[color_counter] <= {color_counter[5:(6-BIT_DEPTH)], zero, zero};
 	end
 end
 // -----------------------------------------------
+
+assign R0 = data_r0[index_depth];
+assign G0 = data_g0[index_depth];
+assign B0 = data_b0[index_depth];
+assign R1 = data_r1[index_depth];
+assign G1 = data_g1[index_depth];
+assign B1 = data_b1[index_depth];
+
+always @(*) begin
+	// data_r0 <= colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	// data_g0 <= colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	// data_b0 <= colors[pixel][(1*BIT_DEPTH-1):0];
+	// data_r1 <= colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	// data_g1 <= colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	// data_b1 <= colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
+	data_r0 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	data_g0 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	data_b0 <= test[col][(1*BIT_DEPTH-1):0];
+	data_r1 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+	data_g1 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+	data_b1 <= test[col][(1*BIT_DEPTH-1):0];
+end
 
 always @(negedge clk_sm or posedge reset)
 begin
@@ -88,20 +111,6 @@ if (reset) begin
 	index_depth	<= 0;
 end else begin
 
-	// data_r0 <= colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	// data_g0 <= colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	// data_b0 <= colors[pixel][(1*BIT_DEPTH-1):0];
-	// data_r1 <= colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	// data_g1 <= colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	// data_b1 <= colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
-
-	data_r0 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	data_g0 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	data_b0 <= test[col][(1*BIT_DEPTH-1):0];
-	data_r1 <= test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-	data_g1 <= test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-	data_b1 <= test[col][(1*BIT_DEPTH-1):0];
-
 	case(state)
 		START: begin
 			blank	<= 1;
@@ -115,12 +124,6 @@ end else begin
 				pixel <= pixel - NUM_COLS + 1;
 				state <= PRINT;
 			end
-			R0 <= data_r0[index_depth];
-			G0 <= data_g0[index_depth];
-			B0 <= data_b0[index_depth];
-			R1 <= data_r1[index_depth];
-			G1 <= data_g1[index_depth];
-			B1 <= data_b1[index_depth];
 			pixel++;
 			col++;
 		end
