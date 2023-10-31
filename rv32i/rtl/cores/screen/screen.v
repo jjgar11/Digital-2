@@ -32,9 +32,10 @@ parameter NUM_COLS = 64;
 parameter NUM_ROWS = 64;
 parameter NUM_PIXELS = NUM_COLS*NUM_ROWS;
 parameter HALF_SCREEN = NUM_PIXELS/2;
-parameter BIT_DEPTH = 6;
-reg [($clog2(NUM_COLS)-1):0]	col;
-reg [($clog2(HALF_SCREEN)-1):0]	pixel;
+parameter BIT_DEPTH = 4;
+reg [($clog2(NUM_COLS)-1):0]		col;
+reg [($clog2(HALF_SCREEN)-1):0]		base_pixel;
+wire [($clog2(HALF_SCREEN)-1):0]	pixel;
 // ----------------------------------------------
 
 // ====== Parametros del BCM (Bit Code Modulation) ======
@@ -74,20 +75,27 @@ initial begin
 end
 // -----------------------------------------------
 
+// ============= Prueba imagen real =============
+initial begin
+    $readmemb("../images/multicolor.txt", colors);
+end
+// ----------------------------------------------
+
 // =============== ASIGNACION DE SALIDAS ===============
 
-// assign data_r0 = colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-// assign data_g0 = colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-// assign data_b0 = colors[pixel][(1*BIT_DEPTH-1):0];
-// assign data_r1 = colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-// assign data_g1 = colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-// assign data_b1 = colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
-assign data_r0 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-assign data_g0 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-assign data_b0 = test[col][(1*BIT_DEPTH-1):0];
-assign data_r1 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
-assign data_g1 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
-assign data_b1 = test[col][(1*BIT_DEPTH-1):0];
+assign pixel = base_pixel + col;
+assign data_r0 = colors[pixel][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+assign data_g0 = colors[pixel][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+assign data_b0 = colors[pixel][(1*BIT_DEPTH-1):0];
+assign data_r1 = colors[pixel+HALF_SCREEN][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+assign data_g1 = colors[pixel+HALF_SCREEN][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+assign data_b1 = colors[pixel+HALF_SCREEN][(1*BIT_DEPTH-1):0];
+// assign data_r0 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+// assign data_g0 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+// assign data_b0 = test[col][(1*BIT_DEPTH-1):0];
+// assign data_r1 = test[col][(3*BIT_DEPTH-1):(2*BIT_DEPTH)];
+// assign data_g1 = test[col][(2*BIT_DEPTH-1):(1*BIT_DEPTH)];
+// assign data_b1 = test[col][(1*BIT_DEPTH-1):0];
 
 assign R0 = data_r0[index_depth];
 assign G0 = data_g0[index_depth];
@@ -102,10 +110,10 @@ begin
 if (reset) begin
 	row	<= 0;
 	col	<= 0;
-	pixel	<= 0;
 	blank	<= 1;
 	latch	<= 0;
 	state	<= START;
+	base_pixel	<= 0;
 	enable_clk	<= 0;
 	count_delay	<= 0;
 	delay_cycles<= INIT_DELAY;
@@ -122,10 +130,8 @@ end else begin
 			if (&col) begin
 				enable_clk <= 0;
 				latch <= 1;
-				pixel <= pixel - NUM_COLS + 1;
 				state <= PRINT;
 			end
-			pixel++;
 			col++;
 		end
 		PRINT: begin
@@ -144,10 +150,10 @@ end else begin
 				state <= START;
 			end
 			if (delay_cycles == 0) begin
-				index_depth <= 0;
-				delay_cycles <= INIT_DELAY;
+				index_depth	<= 0;
+				delay_cycles<= INIT_DELAY;
+				base_pixel	<= base_pixel + NUM_COLS;
 				row++;
-				pixel <= pixel + NUM_COLS;
 			end
 			count_delay++;
 		end
@@ -166,18 +172,28 @@ reg [($clog2(CYCLES)-1):0] count_clk;
 
 reg clk_sm;
 
-always@(posedge clk or posedge reset)
+// always@(posedge clk or posedge reset)
+// begin
+// 	if (reset) begin
+// 		clk_sm <= 0;
+// 		count_clk <= 0;
+// 	end else begin
+// 		if(count_clk==CYCLES - 1) begin		// cuenta x de reloj    
+// 				count_clk<=0;				// reinicia cuenta a 0
+// 				clk_sm <= ~clk_sm; // transiciona clk_sm a alto o bajo
+// 		end	else begin
+// 			count_clk<=count_clk+1;  //  aumenta contador
+// 		end
+// 	end
+// end
+
+always@(clk)
 begin
 	if (reset) begin
 		clk_sm <= 0;
 		count_clk <= 0;
 	end else begin
-		if(count_clk==CYCLES - 1) begin		// cuenta x de reloj    
-				count_clk<=0;				// reinicia cuenta a 0
-				clk_sm <= ~clk_sm; // transiciona clk_sm a alto o bajo
-		end	else begin
-			count_clk<=count_clk+1;  //  aumenta contador
-		end
+		clk_sm <= clk;
 	end
 end
 

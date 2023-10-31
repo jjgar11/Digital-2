@@ -4,7 +4,7 @@ import math
 dir = './rv32i/images/'
 image_name = 'test_stairs.png'
 [image_name, ext] = image_name.split('.')
-profundidad_bits = 3
+profundidad_bits = 4
 # Abre la imagen original
 imagen_original = Image.open(dir + image_name + '.' + ext)
 
