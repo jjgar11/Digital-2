@@ -13,6 +13,9 @@ sim:
 configure:
 	make -C rtl configure
 
+configure-litex:
+	make -C litex configure
+
 #rtl:
 #	make -C rtl/
 	

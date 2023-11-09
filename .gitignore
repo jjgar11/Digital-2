@@ -66,3 +66,4 @@ openFPGALoader
 test_perip.S
 guardado ascii.xlsx
 node_modules
+build
