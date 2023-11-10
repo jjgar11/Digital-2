@@ -13,8 +13,14 @@ sim:
 configure:
 	make -C rtl configure
 
+build-litex:
+	make -C litex build
+
 configure-litex:
 	make -C litex configure
+
+mybios:
+	make -C litex/my_bios
 
 #rtl:
 #	make -C rtl/
@@ -22,6 +28,8 @@ configure-litex:
 clean:
 	make -C firmware/c clean
 	make -C firmware/asm clean
+	make -C litex/my_bios clean
+	make -C litex clean
 #	make -C firmware/firmware_words_src/ clean
 	
 cleanall: clean

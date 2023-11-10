@@ -325,8 +325,7 @@ static unsigned int remote_ip[4] = {REMOTEIP1, REMOTEIP2, REMOTEIP3, REMOTEIP4};
 static unsigned int remote_ip[4] = {192, 168, 1, 100};
 #endif
 
-static int copy_file_from_tftp_to_ram(unsigned int ip, unsigned short server_port,
-const char *filename, char *buffer)
+int copy_file_from_tftp_to_ram(unsigned int ip, unsigned short server_port, const char *filename, char *buffer)
 {
 	int size;
 	printf("Copying %s to %p... ", filename, buffer);

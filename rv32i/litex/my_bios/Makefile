@@ -1,4 +1,5 @@
-BUILD_DIR=../build/colorlight_5a_75e/
+TARGET=alpha_board
+BUILD_DIR=../build/$(TARGET)/
 include $(BUILD_DIR)/software/include/generated/variables.mak
 include $(SOC_DIRECTORY)/software/common.mak
 
@@ -19,6 +20,7 @@ OBJECTS = boot-helper.o	\
 	  cmd_liteeth.o		\
 	  cmd_litesdcard.o  \
 	  cmd_litesata.o    \
+	  cmd_image.o		\
 	  sim_debug.o		\
 	  main.o
 #OBJECTS += complete.o
@@ -30,7 +32,8 @@ CFLAGS += -DBIOS_CONSOLE_LITE
 LSCRIPT = linker.ld
 
 all: bios.bin
-	$(PYTHON) -m litex.soc.software.memusage bios.elf $(CURDIR)/../build/colorlight_5a_75e/software/include/generated/regions.ld $(TRIPLE)
+	$(PYTHON) -m litex.soc.software.memusage bios.elf $(CURDIR)/../build/$(TARGET)/software/include/generated/regions.ld $(TRIPLE)
+	cp bios.bin /srv/tftp/boot.bin
 
 %.bin: %.elf
 	$(OBJCOPY) -O binary $< $@
@@ -42,7 +45,7 @@ bios.elf: crt0.o $(OBJECTS)
 	$(CC) $(LDFLAGS) -T $(LSCRIPT) -N -o $@ \
 		crt0.o \
 		$(OBJECTS) \
-		$(PACKAGES:%=-L../build/colorlight_5a_75e/software/%) \
+		$(PACKAGES:%=-L../build/$(TARGET)/software/%) \
 		-Wl,--whole-archive \
 		-Wl,--gc-sections \
 		-Wl,-Map,$@.map \
@@ -60,6 +63,7 @@ VPATH = .:cmds:$(CPU_DIRECTORY)
 	$(assemble)
 
 clean:
-	$(RM) $(OBJECTS) bios.elf bios.bin .*~ *~ *.d *.map crt0.o
+	$(RM) $(OBJECTS) bios.elf bios.bin .*~ *~ *.d *.map *.o
+	rm -f /srv/tftp/boot.bin
 
 .PHONY: all clean
