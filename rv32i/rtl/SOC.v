@@ -57,6 +57,11 @@ module SOC (
   ) per_screen(
      .clk(clk), 
      .rst(!resetn), 
+     .cs(cs[6]), 
+     .rd(rd), 
+     .wr(wr), 
+     .d_in(mem_wdata), 
+     .addr(mem_addr[4:2]), 
      .clk_screen(CLK_SCREEN),
      .R0(RGB0[0]),
      .G0(RGB0[1]),

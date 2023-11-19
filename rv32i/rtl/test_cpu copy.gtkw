@@ -1,23 +1,24 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Oct  1 06:16:13 2023
+[*] Sun Nov 19 07:19:01 2023
 [*]
 [dumpfile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/bench.vcd"
-[dumpfile_mtime] "Sun Oct  1 06:15:07 2023"
-[dumpfile_size] 3826203
+[dumpfile_mtime] "Sun Nov 19 06:29:51 2023"
+[dumpfile_size] 29791452
 [savefile] "/home/alph4/Juan/UNiversidad/Digital_2/code/rv32i/rtl/test_cpu copy.gtkw"
-[timestart] 4010
+[timestart] 2585520
 [size] 1920 1012
 [pos] -1 -1
-*-9.058149 5276 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.058149 2585920 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [treeopen] bench.uut.
 [treeopen] bench.uut.CPU.
 [treeopen] bench.uut.per_conv.
+[treeopen] bench.uut.per_screen.
 [sst_width] 211
 [signals_width] 455
 [sst_expanded] 1
-[sst_vpaned_height] 445
+[sst_vpaned_height] 309
 @22
 bench.uut.CPU.PC[23:0]
 bench.uut.mem_addr[31:0]
@@ -128,21 +129,46 @@ bench.uut.CPU.writeBackData[31:0]
 @24
 bench.uut.CPU.cycles[31:0]
 @28
-bench.uut.per_conv.cs
-@29
-bench.uut.per_conv.s[4:0]
+bench.uut.per_screen.cs
+@22
+bench.uut.per_screen.d_in_matrix[31:0]
 @28
-bench.uut.per_conv.conv0.bin[31:0]
-bench.uut.per_conv.conv0.busy
-bench.uut.per_conv.conv0.init
-bench.uut.per_conv.conv0.init2
-bench.uut.per_conv.conv0.init_prev
+bench.uut.per_screen.init
+bench.uut.per_screen.screen0.init2
+@800028
+bench.uut.per_screen.s[1:0]
+@28
+(0)bench.uut.per_screen.s[1:0]
+(1)bench.uut.per_screen.s[1:0]
+@1001200
+-group_end
+@28
+bench.uut.per_screen.screen0.wr_data
+bench.uut.per_screen.screen0.next
 @24
-bench.uut.per_conv.conv0.nextState[1:0]
-bench.uut.per_conv.conv0.state[1:0]
+bench.uut.per_screen.screen0.mat_in[31:0]
+bench.uut.per_screen.screen0.addr_mat[11:0]
 @28
-bench.uut.per_conv.ready
-bench.uut.per_conv.result_dn[31:0]
-bench.uut.per_conv.result_up[31:0]
+bench.uut.per_screen.screen0.latch
+@800028
+bench.uut.RGB0[2:0]
+@28
+(0)bench.uut.RGB0[2:0]
+(1)bench.uut.RGB0[2:0]
+(2)bench.uut.RGB0[2:0]
+@1001200
+-group_end
+@800028
+bench.uut.RGB1[2:0]
+@28
+(0)bench.uut.RGB1[2:0]
+(1)bench.uut.RGB1[2:0]
+(2)bench.uut.RGB1[2:0]
+@1001200
+-group_end
+@24
+bench.uut.per_screen.screen0.pixel[10:0]
+bench.uut.per_screen.screen0.pixel_data_up[11:0]
+bench.uut.per_screen.screen0.pixel_data_dn[11:0]
 [pattern_trace] 1
 [pattern_trace] 0
