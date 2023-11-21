@@ -106,7 +106,7 @@ class Platform(LatticeECP5Platform):
     default_clk_name = "clk25"
     default_clk_period = 1e9/25e6
 
-    def __init__(self, toolchain="trellis"):
+    def __init__(self, toolchain="trellis", **kwargs):
         device = "LFE5U-25F-6BG256C"
         io = _io
         connectors = _connectors
