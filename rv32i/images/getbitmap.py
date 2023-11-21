@@ -2,11 +2,12 @@ from PIL import Image
 import math
 
 dir = './rv32i/images/'
-image_name = 'multicolor.jpg'
+image_name = 'luffy.png'
 [image_name, ext] = image_name.split('.')
 profundidad_bits = 12
 # Abre la imagen original
-imagen_original = Image.open(dir + image_name + '.' + ext)
+imagen_original = Image.open(dir + image_name + '.' + ext).resize((64, 64), Image.ANTIALIAS)
+
 
 # Crea una nueva imagen con 4 bits por canal (12 bits en total)
 imagen_bmp_4bits = imagen_original.convert('RGB', dither=Image.NONE, colors=2**profundidad_bits)
