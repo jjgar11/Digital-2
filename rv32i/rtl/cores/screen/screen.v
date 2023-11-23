@@ -2,7 +2,7 @@
 // Design Name : screen32x32 
 // File Name   : screen.v
 //-----------------------------------------------------
-module screen32x32 #(
+module screen64x64 #(
 	parameter          freq_hz = 25000000
 ) (
 	input				reset,
@@ -97,7 +97,7 @@ reg [(TOTAL_BIT_DEPTH-1):0] colors [(NUM_PIXELS-1):0];
 
 // ============= Prueba imagen real =============
 initial begin
-    $readmemb("../images/test_stairs.bin", colors);
+    $readmemb("../../../images/luffy.bin", colors);
 end
 // ----------------------------------------------
 

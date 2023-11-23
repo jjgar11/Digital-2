@@ -6,6 +6,7 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 from litex.gen import *
 
 from litex.build.io import DDROutput
+from litex.build.generic_platform import IOStandard, Subsignal, Pins
 
 from litex_boards.platforms import alpha_board
 
@@ -18,6 +19,26 @@ from litedram.modules import M12L64322A
 from litedram.phy import GENSDRPHY, HalfRateGENSDRPHY
 
 from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII
+
+from module import my_screen
+
+# IOs ----------------------------------------------------------------------------------------------
+
+_screen = [
+	("rows_data", 0,
+		Subsignal("R0", Pins("G14")),
+		Subsignal("G0", Pins("G13")),
+		Subsignal("B0", Pins("F12")),
+		Subsignal("R1", Pins("F13")),
+		Subsignal("G1", Pins("F14")),
+		Subsignal("B1", Pins("E14")),
+		Subsignal("clk_screen", Pins("M3")),
+		Subsignal("blank", Pins("M4")),
+		Subsignal("latch", Pins("N1")),
+		Subsignal("row", Pins("N5 N3 P3 P4 N4")),
+		IOStandard("LVCMOS33")
+	),
+]
 
 # CRG ----------------------------------------------------------------------------------------------
 
@@ -68,11 +89,14 @@ class BaseSoC(SoCCore):
 	def __init__(self):
 		platform = alpha_board.Platform()
 
+		platform.add_extension(_screen)
+		platform.add_source("../rtl/cores/screen/screen.v")
+
 		sys_clk_freq		= int(60e6)
 		with_ethernet		= True
 		eth_phy				= 0
 		with_led_chaser		= True
-		use_internal_osc	= False
+		use_internal_osc	= True
 		sdram_rate			= "1:1"
 
 		# Clock Reset Generation --------------------------------------------------------------------------------------
@@ -90,7 +114,10 @@ class BaseSoC(SoCCore):
 			cpu_type="vexriscv",
 			integrated_rom_size=0x8000,
 			integrated_main_ram_size=0x4000
-			)
+		)
+
+		SoCCore.add_csr(self, "screen_verilog")
+		self.submodules.screen_verilog = my_screen.Verilog_Screen(platform.request("rows_data", 0))
 
 		# SDR SDRAM --------------------------------------------------------------------------------
 		if not self.integrated_main_ram_size:
@@ -124,12 +151,9 @@ class BaseSoC(SoCCore):
 # Build --------------------------------------------------------------------------------------------
 
 def main():
-	from litex.build.parser import LiteXArgumentParser
-	parser = LiteXArgumentParser(platform=alpha_board.Platform, description="LiteX SoC on Colorlight 5A-75E.")
-	args = parser.parse_args()
 
 	soc = BaseSoC()
-	builder = Builder(soc, output_dir='build/alpha_board', csr_csv='build/alpha_board/csr.csv')
+	builder = Builder(soc, output_dir='build/alpha_board_project', csr_csv='build/alpha_board_project/csr.csv')
 	builder.build()
 
 if __name__ == "__main__":

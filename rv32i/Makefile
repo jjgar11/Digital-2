@@ -19,6 +19,12 @@ build-litex:
 configure-litex:
 	make -C litex configure
 
+build-litex-old:
+	make -C litex build-old
+
+configure-litex-old:
+	make -C litex configure-old
+
 mybios:
 	make -C litex/my_bios
 

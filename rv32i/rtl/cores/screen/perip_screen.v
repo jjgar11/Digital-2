@@ -42,7 +42,7 @@ d_in_matrix		= (s[1]) ? d_in : d_in_matrix; // data in
 wr_matrix		= (s[1]) ? 1 : 0;
 end
 
-screen32x32 #(
+screen64x64 #(
 	.freq_hz(  clk_freq )
 )screen0(
 	.reset(      rst          ),
