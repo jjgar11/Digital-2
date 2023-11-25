@@ -25,6 +25,7 @@ class Verilog_Screen(Module, AutoCSR):
 		self.init		= CSRStorage()
 	# Instanciacion modulo Verilog
 		self.specials += Instance("screen64x64",
+			p_freq_hz		= int(60e6),
 			i_reset			= self.reset,
 			i_clk			= self.clk,
 			i_mat_in		= self.mat_in.storage,

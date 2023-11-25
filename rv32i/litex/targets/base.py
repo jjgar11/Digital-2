@@ -113,7 +113,7 @@ class BaseSoC(SoCCore):
 			ident_version=True,
 			cpu_type="vexriscv",
 			integrated_rom_size=0x8000,
-			integrated_main_ram_size=0x4000
+			integrated_main_ram_size=0x8000
 		)
 
 		SoCCore.add_csr(self, "screen_verilog")

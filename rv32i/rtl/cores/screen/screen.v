@@ -90,6 +90,26 @@ end
 // ----------------------------------------------
 
 
+// ============= Creacion de pulso wr_data =============
+reg		wr_data2; 
+reg		wr_data_prev = 0;
+always @(posedge clk)
+begin
+	if (wr_data == wr_data_prev) begin
+		wr_data2 = 0;
+		wr_data_prev <= wr_data_prev;
+	end else begin
+		wr_data_prev <= wr_data;
+		if (wr_data == 1) begin
+			wr_data2 = 1;
+		end else begin
+			wr_data2 = 0;
+		end
+	end
+end
+// ----------------------------------------------
+
+
 // ====== INFORMACION DE LA MATRIX ENTERA ======
 reg [(TOTAL_BIT_DEPTH-1):0] colors [(NUM_PIXELS-1):0];
 // ---------------------------------------------
@@ -120,7 +140,7 @@ begin
 	if (init2) begin
 		addr_mat <= 0;
 	end
-	else if (wr_data) begin
+	else if (wr_data2) begin
 		colors [addr_mat]	<= mat_in[(TOTAL_BIT_DEPTH-1):0];
 		addr_mat <= addr_mat + 1;
 	end
@@ -220,39 +240,44 @@ end
 
 
 // ======================================================================
-// ================== divisor de reloj 25MHz a 12.5MHz ===================
+// ================== divisor de reloj 60MHz a 15MHz ===================
 // ======================================================================
 
-localparam FREQ_SCREEN = 12500000;
+localparam FREQ_SCREEN = 15000000;
 localparam CYCLES = freq_hz/FREQ_SCREEN/2;
 reg [($clog2(CYCLES)-1):0] count_clk;
 
 reg clk_sm;
 
-// always@(posedge clk or posedge reset)
-// begin
-// 	if (reset) begin
-// 		clk_sm <= 0;
-// 		count_clk <= 0;
-// 	end else begin
-// 		if(count_clk==CYCLES - 1) begin		// cuenta x de reloj    
-// 				count_clk<=0;				// reinicia cuenta a 0
-// 				clk_sm <= ~clk_sm; // transiciona clk_sm a alto o bajo
-// 		end	else begin
-// 			count_clk<=count_clk+1;  //  aumenta contador
-// 		end
-// 	end
-// end
-
-always@(clk)
-begin
-	if (reset) begin
-		clk_sm <= 0;
-		count_clk <= 0;
-	end else begin
-		clk_sm <= clk;
+generate
+	if (freq_hz == 60000000) begin
+		always@(posedge clk or posedge reset)
+		begin
+			if (reset) begin
+				clk_sm <= 0;
+				count_clk <= 0;
+			end else begin
+				if(count_clk==CYCLES - 1) begin		// cuenta x de reloj    
+						count_clk <= 0;				// reinicia cuenta a 0
+						clk_sm <= ~clk_sm;			// transiciona clk_sm a alto o bajo
+				end	else begin
+					count_clk <= count_clk + 1;		// aumenta contador
+				end
+			end
+		end
 	end
-end
+	if (freq_hz == 25000000) begin
+		always@(clk)
+		begin
+			if (reset) begin
+				clk_sm <= 0;
+				count_clk <= 0;
+			end else begin
+				clk_sm <= clk;
+			end
+		end
+	end
+endgenerate
 
 // ======================================================================
 // ======================================================================
