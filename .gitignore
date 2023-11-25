@@ -69,3 +69,4 @@ guardado ascii.xlsx
 node_modules
 build
 __pycache__
+*.txt

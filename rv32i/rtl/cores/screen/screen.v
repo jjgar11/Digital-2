@@ -117,7 +117,7 @@ reg [(TOTAL_BIT_DEPTH-1):0] colors [(NUM_PIXELS-1):0];
 
 // ============= Prueba imagen real =============
 initial begin
-    $readmemb("../../../images/luffy.bin", colors);
+    $readmemb("../../../images/luffy.bin.txt", colors);
 end
 // ----------------------------------------------
 
