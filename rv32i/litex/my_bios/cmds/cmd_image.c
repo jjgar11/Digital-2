@@ -50,7 +50,7 @@ static void getfile(int nb_params, char **params)
 		printf("Remote IP: %d.%d.%d.%d\n", remote_ip[0], remote_ip[1], remote_ip[2], remote_ip[3]);
 
 		int size;
-		size = copy_file_from_tftp_to_ram(ip, TFTP_SERVER_PORT, filename, (void *)MAIN_RAM_BASE);
+		size = copy_file_from_tftp_to_ram(ip, TFTP_SERVER_PORT, filename, (void *)MAIN_RAM_BASE+MAIN_RAM_SIZE);
 		if (size <= 0) {
 			printf("File is empty or does not exist.\n");
 			return;

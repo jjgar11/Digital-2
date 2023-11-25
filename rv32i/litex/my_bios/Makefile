@@ -1,4 +1,4 @@
-TARGET=alpha_board
+TARGET=alpha_board_project
 BUILD_DIR=../build/$(TARGET)/
 include $(BUILD_DIR)/software/include/generated/variables.mak
 include $(SOC_DIRECTORY)/software/common.mak

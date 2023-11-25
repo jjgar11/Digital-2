@@ -28,6 +28,9 @@ configure-litex-old:
 mybios:
 	make -C litex/my_bios
 
+hello_world:
+	make -C litex/hello_world
+
 #rtl:
 #	make -C rtl/
 	
