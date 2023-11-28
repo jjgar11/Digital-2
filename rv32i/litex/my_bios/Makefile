@@ -11,18 +11,18 @@ endif
 OBJECTS = boot-helper.o	\
 	  boot.o			\
 	  helpers.o			\
-	  cmd_bios.o		\
-	  cmd_mem.o			\
-	  cmd_boot.o		\
-	  cmd_i2c.o			\
-	  cmd_spiflash.o	\
-	  cmd_litedram.o	\
-	  cmd_liteeth.o		\
-	  cmd_litesdcard.o  \
-	  cmd_litesata.o    \
-	  cmd_image.o		\
 	  sim_debug.o		\
-	  main.o
+	  main.o			\
+	  cmd_bios.o		\
+	  cmd_boot.o		\
+	  cmd_liteeth.o		\
+	  cmd_image.o		\
+#	  cmd_mem.o			\
+#	  cmd_spiflash.o	\
+#	  cmd_i2c.o			\
+#	  cmd_litedram.o	\
+#	  cmd_litesdcard.o  \
+#	  cmd_litesata.o
 #OBJECTS += complete.o
 #OBJECTS += readline.o
 OBJECTS += readline_simple.o

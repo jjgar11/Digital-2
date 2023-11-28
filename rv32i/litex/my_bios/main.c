@@ -59,7 +59,6 @@ __attribute__((__used__)) int main(int i, char **c)
 	char *command;
 	struct command_struct *cmd;
 	int nb_params;
-	int sdr_ok;
 
 #ifdef CONFIG_CPU_HAS_INTERRUPT
 	irq_setmask(0);

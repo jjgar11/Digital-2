@@ -13,6 +13,10 @@
 #include <libliteeth/udp.h>
 #include <libliteeth/tftp.h>
 
+#define IMAGE_BASE 0x00006000
+#define BIT_DEPTH 12
+#define PIXEL_NUM 4096
+
 /**
  * Command "getfile"
  *
@@ -50,13 +54,46 @@ static void getfile(int nb_params, char **params)
 		printf("Remote IP: %d.%d.%d.%d\n", remote_ip[0], remote_ip[1], remote_ip[2], remote_ip[3]);
 
 		int size;
-		size = copy_file_from_tftp_to_ram(ip, TFTP_SERVER_PORT, filename, (void *)MAIN_RAM_BASE+MAIN_RAM_SIZE);
+		size = copy_file_from_tftp_to_ram(ip, TFTP_SERVER_PORT, filename, (void *)MAIN_RAM_BASE+IMAGE_BASE);
 		if (size <= 0) {
 			printf("File is empty or does not exist.\n");
 			return;
 		}
-		printf("Si se copia XD.\n");
-		// boot(0, 0, 0, MAIN_RAM_BASE);
+		printf("Imagen copiada.\n");
+
+		// uint32_t contador = 0;
+		// while (contador < PIXEL_NUM) {
+		// 	printf("%x:", ((volatile unsigned char *) MAIN_RAM_BASE+IMAGE_BASE)[contador]);
+		// 	contador++;
+		// }
+		// printf("\n\rAcabo \n");
+
+		screen_verilog_init_write(1);
+		screen_verilog_init_write(0);
+
+		for (short i = 0; i <= PIXEL_NUM*BIT_DEPTH/8 - 1; i += 3) {
+			short data1	= ((volatile unsigned char *) MAIN_RAM_BASE+IMAGE_BASE)[i];
+			data1 = data1 & 0x00ff;
+			short data2	= ((volatile unsigned char *) MAIN_RAM_BASE+IMAGE_BASE)[i+1];
+			data2 = data2 & 0x00ff;
+			short data3	= ((volatile unsigned char *) MAIN_RAM_BASE+IMAGE_BASE)[i+2];
+			data3 = data3 & 0x00ff;
+			data1 = data1 << 4;
+			short temp_d2 = data2 & 0x00f0;
+			temp_d2 = temp_d2 >> 4;
+			data1 = data1 | temp_d2;
+			screen_verilog_mat_in_write(data1);
+			screen_verilog_wr_data_write(1);
+			screen_verilog_wr_data_write(0);
+
+			data2 = data2 << 8;
+			data2 = data2 | data3;
+			screen_verilog_mat_in_write(data2);
+			screen_verilog_wr_data_write(1);
+			screen_verilog_wr_data_write(0);
+			// printf("%x \n\r", data1);
+			// printf("%x \n\r", data2);
+		}
 	} else {
 	/* Boot failed if we are here... */
 	printf("Especify a file name.\n");

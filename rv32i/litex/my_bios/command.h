@@ -11,15 +11,15 @@
 
 #define SYSTEM_CMDS		0
 #define BOOT_CMDS		1
-#define MEM_CMDS		2
-#define SPIFLASH_CMDS	3
-#define I2C_CMDS		4
-#define LITEDRAM_CMDS	5
-#define LITEETH_CMDS	6
-#define LITESDCARD_CMDS	7
-#define LITESATA_CMDS	8
-#define IMAGE_CMDS		9
-#define NB_OF_GROUPS	10
+#define LITEETH_CMDS	2
+#define IMAGE_CMDS		3
+#define MEM_CMDS		4
+#define SPIFLASH_CMDS	5
+#define I2C_CMDS		6
+#define LITEDRAM_CMDS	7
+#define LITESDCARD_CMDS	8
+#define LITESATA_CMDS	9
+#define NB_OF_GROUPS	4
 
 typedef void (*cmd_handler)(int nb_params, char **params);
 
