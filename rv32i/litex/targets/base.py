@@ -112,8 +112,7 @@ class BaseSoC(SoCCore):
 			ident="LiteX SoC on alpha_board", 
 			ident_version=True,
 			cpu_type="vexriscv",
-			integrated_rom_size=0x8000,
-			integrated_main_ram_size=0x8000
+			integrated_rom_size=0xA000,
 		)
 
 		SoCCore.add_csr(self, "screen_verilog")
@@ -121,14 +120,15 @@ class BaseSoC(SoCCore):
 
 		# SDR SDRAM --------------------------------------------------------------------------------
 		if not self.integrated_main_ram_size:
-			sdrphy_cls = HalfRateGENSDRPHY if sdram_rate == "1:2" else GENSDRPHY
-			self.sdrphy = sdrphy_cls(platform.request("sdram"), sys_clk_freq)
-			sdram_cls  = M12L64322A
+			self.sdrphy = GENSDRPHY(platform.request("sdram"), sys_clk_freq)
 			self.add_sdram("sdram",
 				phy                     = self.sdrphy,
-				module                  = sdram_cls(sys_clk_freq, sdram_rate),
-				l2_cache_size           = kwargs.get("l2_size", 8192),
-				l2_cache_full_memory_we = False,
+				module                  = M12L64322A(sys_clk_freq, sdram_rate),
+				origin                  = self.mem_map["main_ram"],
+				size                    = 0x800000,
+				l2_cache_size           = 0x800, 
+				l2_cache_min_data_width = 128,
+				l2_cache_reverse        = True,
 
 			)
 
