@@ -8,7 +8,9 @@ if len(sys.argv) != 2:
     print("Usage: python tu_script.py nombre_de_la_imagen.png")
     sys.exit(1)
 image_name = sys.argv[1]
-[image_name, ext] = image_name.split('.')
+temp_name = image_name.split('.')
+ext = temp_name.pop()
+image_name = ".".join(temp_name)
 profundidad_bits = 12
 # Abre la imagen original
 imagen_original = Image.open(image_name + '.' + ext).resize((64, 64), Image.LANCZOS)
@@ -54,7 +56,7 @@ with open(image_name + '.bin', 'ab') as f:
 			char = []
 f.close()
 
-if image_name == "images/luffy":
+if image_name.split("/").pop() == "luffy":
 	with open(image_name + '.bin.txt', 'w') as z:
 		z.writelines(binary)
 	z.close()
